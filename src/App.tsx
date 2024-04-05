@@ -5,52 +5,44 @@ import { ModeToggle } from './components/dark-mode/mode-toggle';
 import { useEffect, useState } from 'react';
 import { MyCarousel } from './components/MyCarousel';
 
-// import tempData from '../test.json';
-
 import { MyAvatar } from './components/MyAvatar';
-
-const url = 'https://api.github.com/users/mathoyer/repos';
+import { fetchRepos } from './fetch';
 
 const getRepos = async () => {
-    const response = await fetch(url);
-    const data: Repository[] = await response.json();
-    // const data = tempData;
+    const data: Repository[] = await fetchRepos(/*url*/);
     const modifiedData = data.filter((item) => item.name !== 'MatHoyer');
     return modifiedData;
 };
 
-const getLanguages = async (url: string) => {
-    const response = await fetch(url);
-    const data = await response.json();
-    let returnValue: string = '';
-    for (const key in data) {
-        if (!['HTML', 'CSS', 'Shell', 'Makefile', 'Perl', 'Roff'].includes(key)) {
-            returnValue += `${key} `;
-        }
-    }
-    console.log(returnValue);
-    return 'JavaScript';
+const getLanguages = (data: Repository) => {
+    const excludedLanguages = ['html', 'css', 'shell', 'makefile', 'perl', 'roff'];
+
+    const languages = data.languages.edges
+        .map((edge) => edge.node.name.toLowerCase())
+        .filter((name) => !excludedLanguages.includes(name));
+
+    return languages;
 };
 
 export const App = () => {
     const [repos, setRepos] = useState<Repository[]>([]);
+
     useEffect(() => {
         (async () => {
             const d = await getRepos();
-            d.forEach((repo) => {
-                (async () => {
-                    repo.language = await getLanguages(repo.languages_url);
-                    console.log(repo.language);
-                })();
-            });
-            setRepos(d);
+            const updatedRepos = d.map((repo) => ({
+                ...repo,
+                languagesTab: getLanguages(repo),
+                url: `https://github.com/MatHoyer/${repo.name}`,
+            }));
+            setRepos(updatedRepos);
         })();
     }, []);
 
     return (
         <ThemeProvider>
             <ModeToggle />
-            <div className="h-screen flex flex-col justify-center items-center">
+            <div className="w-screen h-screen flex flex-col space-y-5">
                 <MyAvatar />
                 <MyCarousel repos={repos} />
             </div>
