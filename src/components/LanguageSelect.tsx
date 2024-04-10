@@ -16,7 +16,11 @@ type Props = {
     handleSelect: (value: string) => void;
 };
 
-export const MySelect: React.FC<Props> = ({ tab, handleSelect }) => {
+const capitalizeFirstLetter = (key: string) => {
+    return key.charAt(0).toUpperCase() + key.slice(1).toLowerCase();
+};
+
+export const LanguageSelect: React.FC<Props> = ({ tab, handleSelect }) => {
     return (
         <Select onValueChange={handleSelect}>
             <SelectTrigger className="w-[180px]">
@@ -30,7 +34,10 @@ export const MySelect: React.FC<Props> = ({ tab, handleSelect }) => {
                     </SelectItem>
                     {tab.map((key) => (
                         <SelectItem key={key} value={key}>
-                            {icons[key]}
+                            <div className="flex items-center space-x-2">
+                                {icons[key]}
+                                <span>{capitalizeFirstLetter(key)}</span>
+                            </div>
                         </SelectItem>
                     ))}
                 </SelectGroup>

@@ -2,13 +2,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import React from 'react';
 import { icons } from '@/icons';
-import { MySelect } from './MySelect';
+import { LanguageSelect } from './LanguageSelect';
 
 type Props = {
     repos: Repository[];
 };
 
-export const MyCarousel: React.FC<Props> = ({ repos }) => {
+export const ReposCarousel: React.FC<Props> = ({ repos }) => {
     const [selected, setSelected] = React.useState('all');
     const [iconsTab] = React.useState<string[]>(Object.keys(icons));
 
@@ -24,7 +24,7 @@ export const MyCarousel: React.FC<Props> = ({ repos }) => {
 
     return (
         <div className="flex flex-col items-center">
-            <MySelect tab={iconsTab} handleSelect={handleSelect} />
+            <LanguageSelect tab={iconsTab} handleSelect={handleSelect} />
             <div className="w-full flex justify-center items-center">
                 <Carousel
                     opts={{

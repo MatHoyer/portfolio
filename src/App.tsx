@@ -3,7 +3,7 @@ import './index.css';
 import { ThemeProvider } from '@/components/dark-mode/theme-provider';
 import { ModeToggle } from './components/dark-mode/mode-toggle';
 import { useEffect, useState } from 'react';
-import { MyCarousel } from './components/MyCarousel';
+import { ReposCarousel } from './components/ReposCarousel';
 
 import { MyAvatar } from './components/MyAvatar';
 import { fetchRepos } from './fetch';
@@ -44,7 +44,7 @@ export const App = () => {
             <ModeToggle />
             <div className="w-screen h-screen flex flex-col space-y-5">
                 <MyAvatar />
-                <MyCarousel repos={repos} />
+                <ReposCarousel repos={repos} />
             </div>
         </ThemeProvider>
     );
