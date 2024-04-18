@@ -4,18 +4,18 @@ import { Button } from './ui/button';
 export const NavBar = () => {
   return (
     <div className="bg-gray-800 text-white flex justify-between items-center p-4 w-screen top-0 fixed">
-      <Link to="/">
+      <Link to="/portfolio">
         <h1 className="text-2xl font-bold">Mathieu HOYER</h1>
       </Link>
       <div className="space-x-4">
         <Button asChild>
-          <Link to="/">Home</Link>
+          <Link to="/portfolio">Home</Link>
         </Button>
         <Button asChild>
-          <Link to="/profile">Profile</Link>
+          <Link to="/portfolio/profile">Profile</Link>
         </Button>
         <Button asChild>
-          <Link to="/repos">Projects</Link>
+          <Link to="/portfolio/repos">Projects</Link>
         </Button>
       </div>
     </div>

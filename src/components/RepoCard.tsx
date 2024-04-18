@@ -5,7 +5,7 @@ import React from 'react';
 
 export const RepoCard: React.FC<{ repo: Repository }> = ({ repo }) => {
   return (
-    <Link to={`/repo/${repo.name}`}>
+    <Link to={`/portfolio/repo/${repo.name}`}>
       <div className="p-1 flex justify-center items-center space-x-4">
         <Card className="w-64 h-64 m-4">
           <CardContent className="flex flex-col aspect-square items-center space-y-2 justify-center p-6">

@@ -27,7 +27,7 @@ export const ReposCarousel: React.FC = () => {
     <div className="w-full">
       <div className="flex justify-center space-x-4 w-full">
         <LanguageSelect tab={iconsTab} handleSelect={handleSelect} />
-        <Link to="/repos">
+        <Link to="/portfolio/repos">
           <Button variant="outline">View all</Button>
         </Link>
       </div>
