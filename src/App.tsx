@@ -8,7 +8,6 @@ import { useDispatch } from 'react-redux';
 import { setRepos } from './redux';
 import { Router } from './pages/Router';
 import { NavBar } from './components/NavBar';
-import { useNavigate } from 'react-router-dom';
 
 const getRepos = async () => {
   const data: RepositoryFetch[] = await fetchRepos();
@@ -34,7 +33,6 @@ const getLanguages = (data: RepositoryFetch): Language[] => {
 
 export const App = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {

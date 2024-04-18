@@ -40,7 +40,7 @@ export const ReposCarousel: React.FC = () => {
         >
           <CarouselContent className={cn(fRepos.length < 3 && ' flex justify-center items-center')}>
             {fRepos.map((repo) => (
-              <CarouselItem key={repo.name} className="md:basis-1/2 lg:basis-1/3">
+              <CarouselItem key={repo.name} className="basis-full md:basis-1/2 lg:basis-1/3">
                 <RepoCard repo={repo} />
               </CarouselItem>
             ))}

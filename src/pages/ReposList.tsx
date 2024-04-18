@@ -14,7 +14,7 @@ export const ReposList = () => {
           return (
             <div key={lang}>
               <h1 className="text-4xl">{capitalize(lang)}</h1>
-              <div className="grid grid-cols-3">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                 {fRepos.map((repo) => (
                   <RepoCard key={repo.name} repo={repo} />
                 ))}
