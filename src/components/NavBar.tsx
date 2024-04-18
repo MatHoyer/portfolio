@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 
 export const NavBar = () => {
   return (
-    <div className="bg-gray-800 text-white flex lg:flex-row flex-col justify-between items-center lg:p-4 p-2 w-screen top-0 fixed">
+    <div className="bg-gray-800 text-white flex lg:flex-row flex-col justify-between items-center lg:p-4 p-2 w-screen top-0 fixed z-50">
       <Link to="/portfolio">
         <h1 className="text-2xl font-bold">Mathieu HOYER</h1>
       </Link>

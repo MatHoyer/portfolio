@@ -1,13 +1,20 @@
 import { useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { NotFound } from './NotFound';
 import { getIcons } from '@/icons';
 import { Button } from '@/components/ui/button';
 
 export const Repo = () => {
   const repoName = useParams<{ repoName: string }>().repoName;
-  const repos = useSelector((state: RootState) => state.repos.repos);
+  const repos = useSelector((state: RootStateRepos) => state.repos.repos);
   const repo = repos.find((repo) => repo.name === repoName);
+  const location = useLocation();
+  const from = location.state?.from;
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(from, { state: { from: location.pathname } });
+  };
 
   if (!repo) {
     return <NotFound />;
@@ -30,6 +37,11 @@ export const Repo = () => {
           Check it on GitHub
         </a>
       </Button>
+      {!!from && (
+        <Button variant={'ghost'} asChild>
+          <div onClick={handleClick}>Go back</div>
+        </Button>
+      )}
     </div>
   );
 };

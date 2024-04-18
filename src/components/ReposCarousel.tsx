@@ -9,12 +9,11 @@ import { cn } from '@/lib/utils';
 import { RepoCard } from './RepoCard';
 
 export const ReposCarousel: React.FC = () => {
-  const repos = useSelector((state: RootState) => state.repos.repos);
+  const repos = useSelector((state: RootStateRepos) => state.repos.repos);
   const [selected, setSelected] = React.useState('all');
   const [iconsTab] = React.useState<string[]>(Object.keys(icons));
 
   const handleSelect = (value: string) => {
-    console.log(value);
     setSelected(value);
   };
 
