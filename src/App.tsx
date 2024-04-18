@@ -18,7 +18,9 @@ const getRepos = async () => {
 const getLanguages = (data: RepositoryFetch): Language[] => {
   const excludedLanguages = ['html', 'css', 'shell', 'makefile', 'perl', 'roff'];
 
-  const filteredData = data.languages.edges.filter((edge) => !excludedLanguages.includes(edge.node.name.toLowerCase()));
+  const filteredData = data.languages.edges.filter(
+    (edge) => !excludedLanguages.includes(edge.node.name.toLowerCase()) || edge.size === 0
+  );
 
   const totSize = filteredData.reduce((acc, edge) => acc + edge.size, 0);
   const languages = filteredData.map((edge) => ({
