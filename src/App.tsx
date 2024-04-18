@@ -52,6 +52,16 @@ export const App = () => {
       console.log(updatedRepos);
       dispatch(setRepos(updatedRepos));
     })();
+
+    const prepareUnload = () => {
+      navigate('/portfolio');
+    };
+
+    window.addEventListener('beforeunload', prepareUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', prepareUnload);
+    };
   }, []);
 
   return (
