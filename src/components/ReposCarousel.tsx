@@ -1,4 +1,3 @@
-import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import React from 'react';
 import { icons } from '@/icons';
