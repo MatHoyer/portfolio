@@ -1,51 +1,57 @@
 import './index.css';
 
 import { ThemeProvider } from '@/components/dark-mode/theme-provider';
-import { ModeToggle } from './components/dark-mode/mode-toggle';
-import { useEffect, useState } from 'react';
-import { ReposCarousel } from './components/ReposCarousel';
+import { useEffect } from 'react';
 
-import { MyAvatar } from './components/MyAvatar';
 import { fetchRepos } from './fetch';
+import { useDispatch } from 'react-redux';
+import { setRepos } from './redux';
+import { Router } from './pages/Router';
+import { NavBar } from './components/NavBar';
 
 const getRepos = async () => {
-    const data: Repository[] = await fetchRepos(/*url*/);
-    const modifiedData = data.filter((item) => item.name !== 'MatHoyer');
-    return modifiedData;
+  const data: RepositoryFetch[] = await fetchRepos();
+  const modifiedData = data.filter((item) => item.name !== 'MatHoyer');
+  return modifiedData;
 };
 
-const getLanguages = (data: Repository) => {
-    const excludedLanguages = ['html', 'css', 'shell', 'makefile', 'perl', 'roff'];
+const getLanguages = (data: RepositoryFetch): Language[] => {
+  const excludedLanguages = ['html', 'css', 'shell', 'makefile', 'perl', 'roff'];
 
-    const languages = data.languages.edges
-        .map((edge) => edge.node.name.toLowerCase())
-        .filter((name) => !excludedLanguages.includes(name));
+  const filteredData = data.languages.edges.filter((edge) => !excludedLanguages.includes(edge.node.name.toLowerCase()));
 
-    return languages;
+  const totSize = filteredData.reduce((acc, edge) => acc + edge.size, 0);
+  const languages = filteredData.map((edge) => ({
+    name: edge.node.name.toLowerCase(),
+    percentage: Math.round((edge.size / totSize) * 100),
+  }));
+
+  return languages;
 };
 
 export const App = () => {
-    const [repos, setRepos] = useState<Repository[]>([]);
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        (async () => {
-            const d = await getRepos();
-            const updatedRepos = d.map((repo) => ({
-                ...repo,
-                languagesTab: getLanguages(repo),
-                url: `https://github.com/MatHoyer/${repo.name}`,
-            }));
-            setRepos(updatedRepos);
-        })();
-    }, []);
+  useEffect(() => {
+    (async () => {
+      const d = await getRepos();
+      const updatedRepos = d.map((repo) => ({
+        name: repo.name,
+        description: repo.description,
+        stargazerCount: repo.stargazerCount,
+        forkCount: repo.forkCount,
+        languages: getLanguages(repo),
+        url: `https://github.com/MatHoyer/${repo.name}`,
+      }));
+      console.log(updatedRepos);
+      dispatch(setRepos(updatedRepos));
+    })();
+  }, []);
 
-    return (
-        <ThemeProvider>
-            <ModeToggle />
-            <div className="w-screen h-screen flex flex-col space-y-5">
-                <MyAvatar />
-                <ReposCarousel repos={repos} />
-            </div>
-        </ThemeProvider>
-    );
+  return (
+    <ThemeProvider>
+      <NavBar />
+      <Router />
+    </ThemeProvider>
+  );
 };

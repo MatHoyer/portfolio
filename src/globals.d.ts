@@ -4,15 +4,11 @@ type Owner = {
     // Add more fields from the owner object as needed
 };
 
-type Repository = {
+type RepositoryFetch = {
     name: string;
     description: string;
     stargazerCount: number;
     forkCount: number;
-
-    /*void when fetch*/
-    languagesTab: string[];
-    url: string;
 
     defaultBranchRef: {
         target: {
@@ -33,4 +29,23 @@ type Repository = {
     // Add more fields from the repository object as needed
 };
 
-type RepositoriesResponse = Repository[];
+type Language = {
+    name: string;
+    percentage: number;
+};
+
+type Repository = {
+    name: string;
+    description: string;
+    stargazerCount: number;
+    forkCount: number;
+    languages: Language[];
+    url: string;
+};
+
+// Redux
+type RootState = {
+    repos: {
+        repos: Repository[];
+    };
+};

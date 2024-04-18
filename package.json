@@ -3,7 +3,7 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
-    "homepage": "https://mathoyer.github.io/portfolio/",
+    "homepage": "https://mathoyer.github.io/",
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
@@ -19,6 +19,8 @@
         "@radix-ui/react-slot": "^1.0.2",
         "@react-three/drei": "^9.105.1",
         "@react-three/fiber": "^8.16.1",
+        "@reduxjs/toolkit": "^2.2.3",
+        "@types/react-redux": "^7.1.33",
         "@types/three": "^0.163.0",
         "class-variance-authority": "^0.7.0",
         "clsx": "^2.1.0",
@@ -26,6 +28,9 @@
         "lucide-react": "^0.364.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
+        "react-redux": "^9.1.1",
+        "react-router-dom": "^6.22.3",
+        "redux": "^5.0.1",
         "tailwind-merge": "^2.2.2",
         "tailwindcss-animate": "^1.0.7",
         "three": "^0.163.0"

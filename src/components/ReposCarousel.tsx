@@ -3,58 +3,53 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 import React from 'react';
 import { icons } from '@/icons';
 import { LanguageSelect } from './LanguageSelect';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { Button } from './ui/button';
+import { cn } from '@/lib/utils';
+import { RepoCard } from './RepoCard';
 
-type Props = {
-    repos: Repository[];
-};
+export const ReposCarousel: React.FC = () => {
+  const repos = useSelector((state: RootState) => state.repos.repos);
+  const [selected, setSelected] = React.useState('all');
+  const [iconsTab] = React.useState<string[]>(Object.keys(icons));
 
-export const ReposCarousel: React.FC<Props> = ({ repos }) => {
-    const [selected, setSelected] = React.useState('all');
-    const [iconsTab] = React.useState<string[]>(Object.keys(icons));
+  const handleSelect = (value: string) => {
+    console.log(value);
+    setSelected(value);
+  };
 
-    const handleSelect = (value: string) => {
-        console.log(value);
-        setSelected(value);
-    };
+  const fRepos = repos.filter((repo) => {
+    if (selected === 'all') return true;
+    return repo.languages.some((language) => language.name === selected);
+  });
 
-    repos = repos.filter((repo) => {
-        if (selected === 'all') return true;
-        return repo.languagesTab.includes(selected);
-    });
-
-    return (
-        <div className="flex flex-col items-center">
-            <LanguageSelect tab={iconsTab} handleSelect={handleSelect} />
-            <div className="w-full flex justify-center items-center">
-                <Carousel
-                    opts={{
-                        align: 'start',
-                    }}
-                    className="w-full max-w-5xl"
-                >
-                    <CarouselContent>
-                        {repos.map((repo) => (
-                            <CarouselItem key={repo.name} className="md:basis-1/2 lg:basis-1/3">
-                                <a href={repo.url} target="_blank">
-                                    <div className="p-1">
-                                        <Card className="transform transition duration-500 ease-in-out hover:scale-90 active:scale-100">
-                                            <CardContent className="flex flex-col aspect-square items-center space-y-2 justify-center p-6">
-                                                <span className="text-3xl font-semibold top-1">{repo.name}</span>
-                                                <div className="flex items-center justify-center font-semibold text-center">
-                                                    {repo.languagesTab.map((name) => icons[name])}
-                                                </div>
-                                                <span className="font-semibold text-center">{repo.description}</span>
-                                            </CardContent>
-                                        </Card>
-                                    </div>
-                                </a>
-                            </CarouselItem>
-                        ))}
-                    </CarouselContent>
-                    {repos.length > 3 && <CarouselPrevious />}
-                    {repos.length > 3 && <CarouselNext />}
-                </Carousel>
-            </div>
-        </div>
-    );
+  return (
+    <div className="w-full">
+      <div className="flex justify-center space-x-4 w-full">
+        <LanguageSelect tab={iconsTab} handleSelect={handleSelect} />
+        <Link to="/repos">
+          <Button variant="outline">View all</Button>
+        </Link>
+      </div>
+      <div className="w-full flex justify-center items-center">
+        <Carousel
+          opts={{
+            align: 'start',
+          }}
+          className="w-full"
+        >
+          <CarouselContent className={cn(fRepos.length < 3 && ' flex justify-center items-center')}>
+            {fRepos.map((repo) => (
+              <CarouselItem key={repo.name} className="md:basis-1/2 lg:basis-1/3">
+                <RepoCard repo={repo} />
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          {fRepos.length > 3 && <CarouselPrevious />}
+          {fRepos.length > 3 && <CarouselNext />}
+        </Carousel>
+      </div>
+    </div>
+  );
 };
