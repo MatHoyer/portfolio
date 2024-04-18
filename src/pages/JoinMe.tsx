@@ -3,7 +3,7 @@ import { useState } from 'react';
 export const JoinMe = () => {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
-  let [email, setEmail] = useState('mathieuhoyer@gmail.com');
+  let [email, _] = useState('mathieuhoyer@gmail.com');
 
   const sendEmail = () => {
     window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
