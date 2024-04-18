@@ -1,16 +1,20 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 
-// Repos save
-const initialStateRepos: { repos: Repository[] } = {
-  repos: [],
-};
-
 const ReposSlice = createSlice({
   name: 'repos',
-  initialState: initialStateRepos,
+  initialState: {
+    email: '',
+    company: '',
+    location: '',
+    contributionsCollection: {
+      totalCommitContributions: 0,
+    },
+    totalRepos: 0,
+    repositories: [],
+  } as GlobalData,
   reducers: {
-    setRepos: (state, action: { type: string; payload: Repository[] }) => {
-      state.repos = action.payload;
+    setRepos: (state, action: { type: string; payload: GlobalData }) => {
+      Object.assign(state, action.payload);
     },
   },
 });

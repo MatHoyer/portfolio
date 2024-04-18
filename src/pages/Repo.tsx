@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 export const Repo = () => {
   const repoName = useParams<{ repoName: string }>().repoName;
-  const repos = useSelector((state: RootStateRepos) => state.repos.repos);
+  const repos = useSelector((state: RootStateRepos) => state.repos.repositories);
   const repo = repos.find((repo) => repo.name === repoName);
   const location = useLocation();
   const from = location.state?.from;

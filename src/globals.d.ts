@@ -1,9 +1,3 @@
-type Owner = {
-  login: string;
-  id: number;
-  // Add more fields from the owner object as needed
-};
-
 type RepositoryFetch = {
   name: string;
   description: string;
@@ -25,8 +19,19 @@ type RepositoryFetch = {
       };
     }[];
   };
-  owner: Owner;
-  // Add more fields from the repository object as needed
+};
+
+type FetchTab = {
+  email: string;
+  company: string;
+  location: string;
+  contributionsCollection: {
+    totalCommitContributions: number;
+  };
+  repositories: {
+    totalCount: number;
+    nodes: RepositoryFetch[];
+  };
 };
 
 type Language = {
@@ -43,11 +48,20 @@ type Repository = {
   url: string;
 };
 
+type GlobalData = {
+  email: string;
+  company: string;
+  location: string;
+  contributionsCollection: {
+    totalCommitContributions: number;
+  };
+  totalRepos: number;
+  repositories: Repository[];
+};
+
 // Redux
 type RootStateRepos = {
-  repos: {
-    repos: Repository[];
-  };
+  repos: GlobalData;
 };
 
 type RootStateScroll = {

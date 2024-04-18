@@ -10,9 +10,9 @@ import { Router } from './pages/Router';
 import { NavBar } from './components/NavBar';
 
 const getRepos = async () => {
-  const data: RepositoryFetch[] = await fetchRepos();
-  const modifiedData = data.filter((item) => item.name !== 'MatHoyer');
-  return modifiedData;
+  const data: FetchTab = await fetchRepos();
+  data.repositories.nodes = data.repositories.nodes.filter((item) => item.name !== 'MatHoyer');
+  return data;
 };
 
 const getLanguages = (data: RepositoryFetch): Language[] => {
@@ -38,7 +38,7 @@ export const App = () => {
     (async () => {
       const d = await getRepos();
       console.log(d);
-      const updatedRepos = d.map((repo) => ({
+      const updatedRepos = d.repositories.nodes.map((repo) => ({
         name: repo.name,
         description: repo.description,
         stargazerCount: repo.stargazerCount,
@@ -46,8 +46,18 @@ export const App = () => {
         languages: getLanguages(repo),
         url: `https://github.com/MatHoyer/${repo.name}`,
       }));
-      console.log(updatedRepos);
-      dispatch(setRepos(updatedRepos));
+
+      const globalData: GlobalData = {
+        email: d.email,
+        company: d.company,
+        location: d.location,
+        contributionsCollection: d.contributionsCollection,
+        totalRepos: d.repositories.totalCount,
+        repositories: updatedRepos as Repository[],
+      };
+      console.log(globalData);
+
+      dispatch(setRepos(globalData));
     })();
   }, []);
 

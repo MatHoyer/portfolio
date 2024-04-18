@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 export const ReposList = () => {
-  const repos = useSelector((state: RootStateRepos) => state.repos.repos);
+  const repos = useSelector((state: RootStateRepos) => state.repos.repositories);
   const allLanguages = [...new Set(repos.flatMap((repo) => repo.languages.map((lang) => lang.name)))];
   const scrollPosition = useSelector((state: RootStateScroll) => state.scroll.scroll);
   const dispatch = useDispatch();
