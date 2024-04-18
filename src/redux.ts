@@ -6,10 +6,9 @@ const ReposSlice = createSlice({
     email: '',
     company: '',
     location: '',
-    contributionsCollection: {
-      totalCommitContributions: 0,
-    },
+    totalCommitContributions: 0,
     totalRepos: 0,
+    languagesCount: [],
     repositories: [],
   } as GlobalData,
   reducers: {

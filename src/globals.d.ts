@@ -48,14 +48,18 @@ type Repository = {
   url: string;
 };
 
+type LanguagesTotalSize = {
+  name: string;
+  totalSize: number;
+};
+
 type GlobalData = {
   email: string;
   company: string;
   location: string;
-  contributionsCollection: {
-    totalCommitContributions: number;
-  };
+  totalCommitContributions: number;
   totalRepos: number;
+  languagesCount: Language[];
   repositories: Repository[];
 };
 

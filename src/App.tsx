@@ -31,6 +31,34 @@ const getLanguages = (data: RepositoryFetch): Language[] => {
   return languages;
 };
 
+const getAllLanguagesSize = (data: FetchTab): Language[] => {
+  const excludedLanguages = ['html', 'css', 'shell', 'makefile', 'perl', 'roff'];
+
+  const languages = data.repositories.nodes.reduce((acc: { [key: string]: number }, node) => {
+    node.languages.edges.forEach((edge) => {
+      if (excludedLanguages.includes(edge.node.name.toLowerCase())) return;
+      if (acc[edge.node.name]) {
+        acc[edge.node.name] += edge.size;
+      } else {
+        acc[edge.node.name] = edge.size;
+      }
+    });
+    return acc;
+  }, {});
+
+  const mastery = 250000;
+  const allStats = Object.entries(languages)
+    .map(([name, totalSize]) => ({ name, totalSize }))
+    .map((lang) => ({
+      name: lang.name,
+      totalSize: lang.totalSize > mastery ? mastery : lang.totalSize,
+    }));
+  return allStats.map((lang) => ({
+    name: lang.name,
+    percentage: Math.round((lang.totalSize / mastery) * 100),
+  }));
+};
+
 export const App = () => {
   const dispatch = useDispatch();
 
@@ -51,8 +79,9 @@ export const App = () => {
         email: d.email,
         company: d.company,
         location: d.location,
-        contributionsCollection: d.contributionsCollection,
+        totalCommitContributions: d.contributionsCollection.totalCommitContributions,
         totalRepos: d.repositories.totalCount,
+        languagesCount: getAllLanguagesSize(d),
         repositories: updatedRepos as Repository[],
       };
       console.log(globalData);

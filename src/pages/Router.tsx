@@ -4,6 +4,7 @@ import { NotFound } from './NotFound';
 import { Profile } from './Profile';
 import { ReposList } from './ReposList';
 import { Repo } from './Repo';
+import { JoinMe } from './JoinMe';
 
 export const Router = () => {
   return (
@@ -12,6 +13,7 @@ export const Router = () => {
       <Route path="/portfolio/profile" element={<Profile />} />
       <Route path="/portfolio/repos" element={<ReposList />} />
       <Route path="/portfolio/repo/:repoName" element={<Repo />} />
+      <Route path="/portfolio/contact-me" element={<JoinMe />} />
       <Route path="/portfolio/*" element={<NotFound />} />
     </Routes>
   );
