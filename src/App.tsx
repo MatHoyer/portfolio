@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { setRepos } from './redux';
 import { Router } from './pages/Router';
 import { NavBar } from './components/NavBar';
+import { useNavigate } from 'react-router-dom';
 
 const getRepos = async () => {
   const data: RepositoryFetch[] = await fetchRepos();
@@ -19,7 +20,7 @@ const getLanguages = (data: RepositoryFetch): Language[] => {
   const excludedLanguages = ['html', 'css', 'shell', 'makefile', 'perl', 'roff'];
 
   const filteredData = data.languages.edges.filter(
-    (edge) => !excludedLanguages.includes(edge.node.name.toLowerCase()) || edge.size === 0
+    (edge) => !excludedLanguages.includes(edge.node.name.toLowerCase()) || edge.size <= 100
   );
 
   const totSize = filteredData.reduce((acc, edge) => acc + edge.size, 0);
@@ -33,10 +34,12 @@ const getLanguages = (data: RepositoryFetch): Language[] => {
 
 export const App = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     (async () => {
       const d = await getRepos();
+      console.log(d);
       const updatedRepos = d.map((repo) => ({
         name: repo.name,
         description: repo.description,
@@ -48,6 +51,16 @@ export const App = () => {
       console.log(updatedRepos);
       dispatch(setRepos(updatedRepos));
     })();
+
+    const prepareUnload = () => {
+      navigate('/portfolio');
+    };
+
+    window.addEventListener('beforeunload', prepareUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', prepareUnload);
+    };
   }, []);
 
   return (
