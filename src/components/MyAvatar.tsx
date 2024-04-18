@@ -4,7 +4,7 @@ import { RoundProfilePicture } from './RoundProfilePicture';
 
 export const MyAvatar = () => {
   return (
-    <Card className="flex items-center justify-center p-4 rounded-lg shadow-md overflow-hidden max-w-md max-h-64">
+    <Card className="avatar flex items-center justify-center p-4 rounded-lg shadow-md overflow-hidden max-w-md max-h-64">
       <CardContent className="flex aspect-square items-center justify-center p-6">
         <Link to="/portfolio/profile">
           <div className="h-screen flex flex-col justify-center items-center">
