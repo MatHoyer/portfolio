@@ -39,7 +39,7 @@ export const Profile = () => {
           </a>
         </Button>
         <Button variant={'outline'} asChild>
-          <Link to="/portfolio/contact-me">Contact me</Link>
+          <Link to="/contact-me">Contact me</Link>
         </Button>
       </div>
     </div>

@@ -8,7 +8,7 @@ export const RepoCard: React.FC<{ repo: Repository; fromPage?: string }> = ({ re
   const location = useLocation();
 
   const handleClick = () => {
-    navigate(`/portfolio/repo/${repo.name}`, { state: { from: location.pathname } });
+    navigate(`/repo/${repo.name}`, { state: { from: location.pathname } });
   };
 
   return (

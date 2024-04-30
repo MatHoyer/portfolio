@@ -9,12 +9,12 @@ import { JoinMe } from './JoinMe';
 export const Router = () => {
   return (
     <Routes>
-      <Route path="/portfolio" element={<Home />} />
-      <Route path="/portfolio/profile" element={<Profile />} />
-      <Route path="/portfolio/repos" element={<ReposList />} />
-      <Route path="/portfolio/repo/:repoName" element={<Repo />} />
-      <Route path="/portfolio/contact-me" element={<JoinMe />} />
-      <Route path="/portfolio/*" element={<NotFound />} />
+      <Route path="/" element={<Home />} />
+      <Route path="/profile" element={<Profile />} />
+      <Route path="/repos" element={<ReposList />} />
+      <Route path="/repo/:repoName" element={<Repo />} />
+      <Route path="/contact-me" element={<JoinMe />} />
+      <Route path="/*" element={<NotFound />} />
     </Routes>
   );
 };
