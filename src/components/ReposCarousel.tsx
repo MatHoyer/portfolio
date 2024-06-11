@@ -1,17 +1,15 @@
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import { cn } from '@/lib/utils';
 import React from 'react';
-import { icons } from '@/icons';
-import { LanguageSelect } from './LanguageSelect';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { Button } from './ui/button';
-import { cn } from '@/lib/utils';
+import { LanguageSelect } from './LanguageSelect';
 import { RepoCard } from './RepoCard';
+import { Button } from './ui/button';
 
 export const ReposCarousel: React.FC = () => {
   const repos = useSelector((state: RootStateRepos) => state.repos.repositories);
   const [selected, setSelected] = React.useState('all');
-  const [iconsTab] = React.useState<string[]>(Object.keys(icons));
 
   const handleSelect = (value: string) => {
     setSelected(value);
@@ -25,7 +23,7 @@ export const ReposCarousel: React.FC = () => {
   return (
     <div className="w-full">
       <div className="flex justify-center space-x-4 w-full">
-        <LanguageSelect tab={iconsTab} handleSelect={handleSelect} />
+        <LanguageSelect handleSelect={handleSelect} />
         <Link to="/repos">
           <Button variant="outline">View all</Button>
         </Link>

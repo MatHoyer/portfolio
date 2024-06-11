@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-const ProgressBar = ({ percentage }: { percentage: number }) => {
+const ProgressBar: React.FC<{ percentage: number }> = ({ percentage }) => {
   return (
     <div className="w-full bg-indigo-200 rounded-lg">
       <div className="h-2 bg-indigo-700 rounded-lg" style={{ width: `${percentage}%` }}></div>

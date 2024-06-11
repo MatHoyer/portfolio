@@ -1,9 +1,7 @@
 import { RepoCard } from '@/components/RepoCard';
-import { capitalize } from '@/lib/utils';
 import { setScroll } from '@/redux';
 import { useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router-dom';
 
 export const ReposList = () => {
@@ -41,7 +39,7 @@ export const ReposList = () => {
           const fRepos = repos.filter((repo) => repo.languages.some((language) => language.name === lang));
           return (
             <div key={lang}>
-              <h1 className="text-4xl">{capitalize(lang)}</h1>
+              <h1 className="text-4xl">{lang.capitalize()}</h1>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {fRepos.map((repo) => (
                   <RepoCard key={repo.name} repo={repo} />

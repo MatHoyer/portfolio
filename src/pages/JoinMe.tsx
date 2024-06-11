@@ -1,9 +1,10 @@
+import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
 export const JoinMe = () => {
   const [subject, setSubject] = useState('');
   const [body, setBody] = useState('');
-  let [email, _] = useState('mathieuhoyer@gmail.com');
+  const email = 'mathieuhoyer@gmail.com';
 
   const sendEmail = () => {
     window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
@@ -29,7 +30,7 @@ export const JoinMe = () => {
               type="text"
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
-              className="mt-1 block w-full rounded-md bg-gray-700 border-transparent focus:border-indigo-500 focus:bg-gray-900 focus:ring-0 text-white"
+              className="mt-1 block w-full rounded-md bg-gray-700 border-transparent focus:border-indigo-500 focus:ring-0 text-white"
             />
           </label>
           <label className="block">
@@ -37,15 +38,10 @@ export const JoinMe = () => {
             <textarea
               value={body}
               onChange={(e) => setBody(e.target.value)}
-              className="mt-1 block w-full h-20 rounded-md bg-gray-700 border-transparent focus:border-indigo-500 focus:bg-gray-900 focus:ring-0 text-white"
+              className="mt-1 block w-full h-20 rounded-md bg-gray-700 border-transparent focus:border-indigo-500 focus:ring-0 text-white"
             />
           </label>
-          <button
-            type="submit"
-            className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Open mail
-          </button>
+          <Button type="submit">Open mail</Button>
         </form>
       </div>
     </div>

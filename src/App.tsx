@@ -3,11 +3,12 @@ import './index.css';
 import { ThemeProvider } from '@/components/dark-mode/theme-provider';
 import { useEffect } from 'react';
 
-import { fetchRepos } from './fetch';
 import { useDispatch } from 'react-redux';
-import { setRepos } from './redux';
-import { Router } from './pages/Router';
+import { Router } from './Router';
 import { NavBar } from './components/NavBar';
+import { fetchRepos } from './fetch';
+import './lib/extensions';
+import { setRepos } from './redux';
 
 const getRepos = async () => {
   const data: FetchTab = await fetchRepos();
@@ -65,7 +66,6 @@ export const App = () => {
   useEffect(() => {
     (async () => {
       const d = await getRepos();
-      // console.log(d);
       const updatedRepos = d.repositories.nodes.map((repo) => ({
         name: repo.name,
         description: repo.description,
@@ -84,7 +84,6 @@ export const App = () => {
         languagesCount: getAllLanguagesSize(d),
         repositories: updatedRepos as Repository[],
       };
-      // console.log(globalData);
 
       dispatch(setRepos(globalData));
     })();

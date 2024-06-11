@@ -1,8 +1,8 @@
+import { Button } from '@/components/ui/button';
+import { getLanguageIcon } from '@/icons';
 import { useSelector } from 'react-redux';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { NotFound } from './NotFound';
-import { getIcons } from '@/icons';
-import { Button } from '@/components/ui/button';
 
 export const Repo = () => {
   const repoName = useParams<{ repoName: string }>().repoName;
@@ -26,7 +26,7 @@ export const Repo = () => {
       <div className="flex justify-center">
         {repo.languages.map((lang) => (
           <div key={lang.name} className="flex flex-col items-center">
-            {getIcons(lang.name, 50)}
+            {getLanguageIcon(lang.name, 50)}
             <span>{lang.percentage}%</span>
           </div>
         ))}

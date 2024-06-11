@@ -1,7 +1,7 @@
+import { getLanguageIcon } from '@/icons';
+import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Card, CardContent } from './ui/card';
-import { getIcons } from '@/icons';
-import React from 'react';
 
 export const RepoCard: React.FC<{ repo: Repository; fromPage?: string }> = ({ repo }) => {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export const RepoCard: React.FC<{ repo: Repository; fromPage?: string }> = ({ re
             <span className="text-3xl font-semibold top-1">{repo.name}</span>
             <div className="flex items-center justify-center font-semibold text-center">
               {repo.languages.map((language) =>
-                React.cloneElement(getIcons(language.name, 25), { key: language.name })
+                React.cloneElement(getLanguageIcon(language.name) ?? <></>, { key: language.name })
               )}
             </div>
             <span className="font-semibold text-center">{repo.description}</span>

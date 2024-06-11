@@ -9,15 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { capitalize } from '@/lib/utils';
-import { getIcons } from '@/icons';
+import { availableLanguageIcons, getLanguageIcon } from '@/icons';
 
 type Props = {
-  tab: string[];
   handleSelect: (value: string) => void;
 };
 
-export const LanguageSelect: React.FC<Props> = ({ tab, handleSelect }) => {
+export const LanguageSelect: React.FC<Props> = ({ handleSelect }) => {
   return (
     <Select onValueChange={handleSelect}>
       <SelectTrigger className="w-[180px] ">
@@ -29,11 +27,11 @@ export const LanguageSelect: React.FC<Props> = ({ tab, handleSelect }) => {
           <SelectItem key="all" value="all">
             All
           </SelectItem>
-          {tab.map((key) => (
-            <SelectItem key={key} value={key}>
+          {availableLanguageIcons.map((iconName) => (
+            <SelectItem key={iconName} value={iconName}>
               <div className="flex items-center space-x-2">
-                {getIcons(key, 25)}
-                <span>{capitalize(key)}</span>
+                {getLanguageIcon(iconName)}
+                <span>{iconName.capitalize()}</span>
               </div>
             </SelectItem>
           ))}
