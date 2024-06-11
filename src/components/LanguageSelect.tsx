@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { availableLanguageIcons, getLanguageIcon } from '@/icons';
+import { availableLanguages, getLanguageIcon } from '@/icons';
 
 type Props = {
   handleSelect: (value: string) => void;
@@ -27,11 +27,11 @@ export const LanguageSelect: React.FC<Props> = ({ handleSelect }) => {
           <SelectItem key="all" value="all">
             All
           </SelectItem>
-          {availableLanguageIcons.map((iconName) => (
-            <SelectItem key={iconName} value={iconName}>
+          {availableLanguages.map((language) => (
+            <SelectItem key={language} value={language}>
               <div className="flex items-center space-x-2">
-                {getLanguageIcon(iconName)}
-                <span>{iconName.capitalize()}</span>
+                {getLanguageIcon(language)}
+                <span>{language.capitalize()}</span>
               </div>
             </SelectItem>
           ))}

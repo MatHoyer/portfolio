@@ -9,7 +9,7 @@ const languageIcons: Record<string, React.FC<TIconProps>> = {
   dockerfile: Docker,
 };
 
-export const availableLanguageIcons = Object.keys(languageIcons);
+export const availableLanguages = Object.keys(languageIcons);
 
 export const getLanguageIcon = (name: string, size: number = 25) => {
   const Icon = languageIcons[name];
