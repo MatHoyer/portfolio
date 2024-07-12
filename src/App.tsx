@@ -1,8 +1,9 @@
 import './index.css';
 
 import { ThemeProvider } from '@/components/dark-mode/theme-provider';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
+import { Loader2Icon } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { Router } from './Router';
 import { NavBar } from './components/NavBar';
@@ -62,6 +63,7 @@ const getAllLanguagesSize = (data: FetchTab): Language[] => {
 
 export const App = () => {
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -86,13 +88,20 @@ export const App = () => {
       };
 
       dispatch(setRepos(globalData));
+      setIsLoading(false);
     })();
   }, []);
 
   return (
     <ThemeProvider defaultTheme="dark">
       <NavBar />
-      <Router />
+      {isLoading ? (
+        <div className="h-screen flex justify-center items-center">
+          <Loader2Icon className="animate-spin" size={100} />
+        </div>
+      ) : (
+        <Router />
+      )}
     </ThemeProvider>
   );
 };
