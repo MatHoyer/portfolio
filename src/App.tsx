@@ -34,7 +34,11 @@ const getLanguages = (data: RepositoryFetch): Language[] => {
 };
 
 const getAllLanguagesSize = (data: FetchTab): Language[] => {
-  const excludedLanguages = ['html', 'css', 'shell', 'makefile', 'perl', 'roff'];
+  const excludedLanguages = ['html', 'css', 'shell', 'makefile', 'perl', 'roff', 'dockerfile'];
+  const nameShortCut: Record<string, string> = {
+    TypeScript: 'TS',
+    JavaScript: 'JS',
+  };
 
   const languages = data.repositories.nodes.reduce((acc: { [key: string]: number }, node) => {
     node.languages.edges.forEach((edge) => {
@@ -48,7 +52,7 @@ const getAllLanguagesSize = (data: FetchTab): Language[] => {
     return acc;
   }, {});
 
-  const mastery = 250000;
+  const mastery = 250_000;
   const allStats = Object.entries(languages)
     .map(([name, totalSize]) => ({ name, totalSize }))
     .map((lang) => ({
@@ -56,7 +60,7 @@ const getAllLanguagesSize = (data: FetchTab): Language[] => {
       totalSize: lang.totalSize > mastery ? mastery : lang.totalSize,
     }));
   return allStats.map((lang) => ({
-    name: lang.name,
+    name: nameShortCut[lang.name] || lang.name,
     percentage: Math.round((lang.totalSize / mastery) * 100),
   }));
 };
