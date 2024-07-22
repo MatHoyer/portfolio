@@ -52,7 +52,7 @@ const getAllLanguagesSize = (data: FetchTab): Language[] => {
     return acc;
   }, {});
 
-  const mastery = 250_000;
+  const mastery = Math.max(...Object.values(languages));
   const allStats = Object.entries(languages)
     .map(([name, totalSize]) => ({ name, totalSize }))
     .map((lang) => ({
