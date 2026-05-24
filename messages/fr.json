@@ -1,0 +1,103 @@
+{
+  "metadata": {
+    "siteTitle": "Mathieu HOYER | API Développeur",
+    "siteDescription": "Portfolio développeur backend — Mathieu HOYER. Projets, compétences et contact.",
+    "ogDescription": "Portfolio développeur backend avec une interface inspirée de Swagger."
+  },
+  "nav": {
+    "tagDeveloper": "Développeur",
+    "tagRepositories": "Dépôts",
+    "tagContact": "Contact",
+    "overview": "Vue d'ensemble",
+    "profile": "Profil",
+    "repositories": "Dépôts",
+    "contact": "Contact",
+    "privacy": "Confidentialité",
+    "footerStatic": "Portfolio statique — aucun cookie de suivi"
+  },
+  "locale": {
+    "label": "Langue",
+    "en": "Anglais",
+    "fr": "Français"
+  },
+  "loader": {
+    "summary": "Chargement de l'endpoint…",
+    "windowTitle": "bash — portfolio",
+    "statusConnecting": "connexion…",
+    "statusFetching": "récupération de la réponse…",
+    "statusParsing": "analyse du JSON…"
+  },
+  "common": {
+    "schema": "Schéma",
+    "response200": "Réponse 200",
+    "languagesArray": "languages[]",
+    "execute": "Exécuter",
+    "subject": "subject",
+    "body": "body",
+    "stringPlaceholder": "string",
+    "noDescription": "Aucune description"
+  },
+  "home": {
+    "title": "API Développeur",
+    "subtitle": "Portfolio de Mathieu HOYER — développeur backend. Explorez les endpoints ci-dessous.",
+    "codeDescription": "Portfolio personnel de développeur",
+    "overviewSummary": "Vue d'ensemble de l'API",
+    "availableEndpoints": "Endpoints disponibles :",
+    "featuredRepos": "Dépôts à la une",
+    "viewAllRepos": "GET /repos → voir les {count} dépôts"
+  },
+  "profile": {
+    "metaTitle": "Profil",
+    "metaDescription": "Profil développeur — Mathieu HOYER",
+    "summary": "Profil développeur",
+    "commitsAcross": "{commits} commits sur {repos} dépôts",
+    "skillDistribution": "languages[] — répartition des compétences",
+    "viewOnGitHub": "Voir sur GitHub",
+    "postContact": "POST /contact"
+  },
+  "repos": {
+    "metaTitle": "Dépôts",
+    "metaDescription": "Dépôts GitHub de Mathieu HOYER",
+    "listSummary": "Lister les dépôts ({count})",
+    "filterLabel": "language",
+    "allLanguages": "Tous les langages",
+    "repoCount": "{count, plural, one {# dépôt} other {# dépôts}}",
+    "noReposForLanguage": "Aucun dépôt pour ce langage.",
+    "filterBySummary": "Filtrer par {language} ({count})",
+    "backToAll": "← GET /repos (tous)",
+    "metaByLanguageTitle": "Dépôts — {language}",
+    "metaByLanguageDescription": "Dépôts utilisant {language}"
+  },
+  "repo": {
+    "metaDescription": "Dépôt {name} — Mathieu HOYER",
+    "openOnGitHub": "Ouvrir sur GitHub",
+    "backToRepos": "← GET /repos"
+  },
+  "contact": {
+    "metaTitle": "Contact",
+    "metaDescription": "Contacter Mathieu HOYER",
+    "summary": "Envoyer un message",
+    "intro": "Ouvre votre client mail avec l'objet et le corps préremplis. Ou écrivez à",
+    "orEmail": "Ou par email"
+  },
+  "privacy": {
+    "metaTitle": "Confidentialité",
+    "metaDescription": "Politique de confidentialité du portfolio mathoyer",
+    "title": "Confidentialité",
+    "intro": "Ce site est un portfolio statique. Il n'exécute pas de serveur applicatif, ne pose pas de cookies de suivi et ne collecte pas les soumissions de formulaire côté backend.",
+    "summary": "Résumé du traitement des données",
+    "hosting": "Fichiers statiques (Docker / GHCR). Pas d'exécution serveur.",
+    "analytics": "Aucun. Pas de cookies, pas de traceurs.",
+    "githubData": "Profil et dépôts publics récupérés au build via l'API GitHub",
+    "contactValue": "Le formulaire ouvre votre client mail ; rien n'est envoyé à ce site",
+    "retention": "Contenu rafraîchi à chaque déploiement depuis les données GitHub publiques",
+    "githubNote": "GitHub peut traiter des requêtes lors du build du site (CI) ou lorsque vous visitez des dépôts sur github.com. Voir",
+    "githubLink": "la déclaration de confidentialité de GitHub",
+    "questions": "Questions :"
+  },
+  "notFound": {
+    "title": "404 — Introuvable",
+    "description": "L'endpoint demandé n'existe pas.",
+    "home": "GET / → retour à l'accueil"
+  }
+}
