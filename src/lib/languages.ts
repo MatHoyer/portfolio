@@ -30,9 +30,13 @@ export function normalizeLanguageKey(name: string): string {
   return lower;
 }
 
-/** URL-safe slug for hrefs and display — not for route params or static paths. */
+/** URL-safe slug for hrefs — not for route params or static paths. */
 export function languageToSlug(name: string): string {
   return encodeURIComponent(normalizeLanguageKey(name));
+}
+
+export function languageFilterPath(name: string): string {
+  return `/repos/language/${languageToSlug(name)}`;
 }
 
 export function slugToLanguage(slug: string): string {

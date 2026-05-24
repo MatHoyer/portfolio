@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/select";
 import {
   formatLanguageLabel,
+  languageFilterPath,
   normalizeLanguageKey,
 } from "@/lib/languages";
 import { useRouter } from "@/i18n/navigation";
@@ -41,7 +42,7 @@ export function LanguageSelect({
           if (!next || next === ALL_VALUE) {
             router.push("/repos");
           } else {
-            router.push(`/repos/language/${normalizeLanguageKey(next)}`);
+            router.push(languageFilterPath(next));
           }
         }}
       >
