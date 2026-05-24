@@ -1,0 +1,103 @@
+{
+  "metadata": {
+    "siteTitle": "Mathieu HOYER | Developer API",
+    "siteDescription": "Backend developer portfolio — Mathieu HOYER. Projects, skills, and contact.",
+    "ogDescription": "Backend developer portfolio with a Swagger-inspired UI."
+  },
+  "nav": {
+    "tagDeveloper": "Developer",
+    "tagRepositories": "Repositories",
+    "tagContact": "Contact",
+    "overview": "Overview",
+    "profile": "Profile",
+    "repositories": "Repositories",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "footerStatic": "Static portfolio — no tracking cookies"
+  },
+  "locale": {
+    "label": "Language",
+    "en": "English",
+    "fr": "French"
+  },
+  "loader": {
+    "summary": "Loading endpoint…",
+    "windowTitle": "bash — portfolio",
+    "statusConnecting": "connecting…",
+    "statusFetching": "fetching response…",
+    "statusParsing": "parsing JSON…"
+  },
+  "common": {
+    "schema": "Schema",
+    "response200": "Response 200",
+    "languagesArray": "languages[]",
+    "execute": "Execute",
+    "subject": "subject",
+    "body": "body",
+    "stringPlaceholder": "string",
+    "noDescription": "No description"
+  },
+  "home": {
+    "title": "Developer API",
+    "subtitle": "Portfolio of Mathieu HOYER — backend developer. Explore endpoints below.",
+    "codeDescription": "Personal developer portfolio",
+    "overviewSummary": "API overview",
+    "availableEndpoints": "Available endpoints:",
+    "featuredRepos": "Featured repositories",
+    "viewAllRepos": "GET /repos → view all {count} repositories"
+  },
+  "profile": {
+    "metaTitle": "Profile",
+    "metaDescription": "Developer profile — Mathieu HOYER",
+    "summary": "Developer profile",
+    "commitsAcross": "{commits} commits across {repos} repositories",
+    "skillDistribution": "languages[] — skill distribution",
+    "viewOnGitHub": "View on GitHub",
+    "postContact": "POST /contact"
+  },
+  "repos": {
+    "metaTitle": "Repositories",
+    "metaDescription": "GitHub repositories by Mathieu HOYER",
+    "listSummary": "List repositories ({count})",
+    "filterLabel": "language",
+    "allLanguages": "All languages",
+    "repoCount": "{count, plural, one {# repository} other {# repositories}}",
+    "noReposForLanguage": "No repositories for this language.",
+    "filterBySummary": "Filter by {language} ({count})",
+    "backToAll": "← GET /repos (all)",
+    "metaByLanguageTitle": "Repos — {language}",
+    "metaByLanguageDescription": "Repositories using {language}"
+  },
+  "repo": {
+    "metaDescription": "Repository {name} — Mathieu HOYER",
+    "openOnGitHub": "Open on GitHub",
+    "backToRepos": "← GET /repos"
+  },
+  "contact": {
+    "metaTitle": "Contact",
+    "metaDescription": "Contact Mathieu HOYER",
+    "summary": "Send a message",
+    "intro": "Opens your mail client with subject and body prefilled. Or email",
+    "orEmail": "Or email"
+  },
+  "privacy": {
+    "metaTitle": "Privacy",
+    "metaDescription": "Privacy policy for mathoyer portfolio",
+    "title": "Privacy",
+    "intro": "This site is a static portfolio. It does not run application servers, does not set tracking cookies, and does not collect form submissions on a backend.",
+    "summary": "Data handling summary",
+    "hosting": "Static files (Docker / GHCR). No server-side runtime.",
+    "analytics": "None. No cookies, no trackers.",
+    "githubData": "Public profile/repos fetched at build time via GitHub API",
+    "contactValue": "Form opens your email client; nothing is sent to this site",
+    "retention": "Content refreshed on each deploy from public GitHub data",
+    "githubNote": "GitHub may process requests when the site is built (CI) or when you visit linked repositories on github.com. See",
+    "githubLink": "GitHub's privacy statement",
+    "questions": "Questions:"
+  },
+  "notFound": {
+    "title": "404 — Not Found",
+    "description": "The requested endpoint does not exist.",
+    "home": "GET / → return home"
+  }
+}

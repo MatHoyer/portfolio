@@ -1,4 +1,0 @@
-services:
-  portfolio:
-    ports:
-      - 80:80

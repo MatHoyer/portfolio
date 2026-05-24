@@ -1,5 +1,9 @@
 node_modules
-dist
+.next
+out
 .git
-*.log
-.pnpm-store
+.env
+.env.*
+!.env.example
+*.md
+!README.md
