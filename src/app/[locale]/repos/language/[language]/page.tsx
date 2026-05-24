@@ -8,6 +8,7 @@ import {
   collectRepoLanguages,
   formatLanguageLabel,
   languageToSlug,
+  normalizeLanguageKey,
   slugToLanguage,
 } from "@/lib/languages";
 import { cn } from "@/lib/utils";
@@ -23,7 +24,7 @@ export async function generateStaticParams() {
   const data = await getDeveloperData();
   const languages = collectRepoLanguages(data.repositories);
   return languages.map((language) => ({
-    language: languageToSlug(language),
+    language: normalizeLanguageKey(language),
   }));
 }
 
@@ -37,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description: t("metaByLanguageDescription", {
       language: formatLanguageLabel(language),
     }),
-    alternates: localeAlternates(`/repos/language/${slug}`),
+    alternates: localeAlternates(`/repos/language/${languageToSlug(language)}`),
   };
 }
 
@@ -62,7 +63,7 @@ export default async function ReposByLanguagePage({ params }: Props) {
     <div className="flex flex-col gap-8">
       <OperationBlock
         method="GET"
-        path={`/repos/language/${slug}`}
+        path={`/repos/language/${languageToSlug(language)}`}
         summary={t("filterBySummary", {
           language: formatLanguageLabel(language),
           count: filtered.length,
