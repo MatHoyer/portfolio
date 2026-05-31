@@ -11,6 +11,9 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
+ARG APP_VERSION
+ENV APP_VERSION=${APP_VERSION}
+
 # Secrets via BuildKit mounts only — never ARG/ENV (avoids layer leaks)
 RUN --mount=type=secret,id=github_token \
     --mount=type=secret,id=email \
@@ -22,7 +25,11 @@ FROM nginx:alpine
 
 COPY --from=builder /app/out /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+ENV APP_VERSION=
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "daemon off;"]
+ENTRYPOINT ["/docker-entrypoint.sh"]

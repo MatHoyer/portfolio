@@ -3,9 +3,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        APP_VERSION: ${APP_VERSION:-}
       secrets:
         - github_token
         - email
+    environment:
+      APP_VERSION: ${APP_VERSION:-}
     ports:
       - "8080:80"
 

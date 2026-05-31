@@ -5,6 +5,7 @@ import { OperationBlock } from "@/components/swagger/operation-block";
 import { RepoCard } from "@/components/swagger/repo-card";
 import { Link } from "@/i18n/navigation";
 import { getDeveloperData } from "@/lib/github";
+import { getAppVersion } from "@/lib/version";
 import { localeAlternates } from "@/lib/metadata";
 import { navItems } from "@/lib/nav";
 
@@ -33,7 +34,7 @@ export default async function HomePage({ params }: Props) {
         <p className="mb-4 text-swagger-muted">{t("subtitle")}</p>
         <CodePanel
           data={{
-            version: "1.0.0",
+            version: getAppVersion(),
             title: "Mathieu HOYER API",
             description: t("codeDescription"),
             totalRepos: data.totalRepos,
