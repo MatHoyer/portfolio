@@ -41,7 +41,7 @@ If a GitHub token was ever committed to this repository, **revoke it immediately
 
 ## GHCR
 
-Images are published to `ghcr.io/<owner>/portfolio` on push to `main` and on `v*` tags. Set the package visibility to **public** in GitHub → Packages after the first publish.
+Images are published to `ghcr.io/<owner>/portfolio` on `v*` tags only (not on push to `main`). Set the package visibility to **public** in GitHub → Packages after the first publish.
 
 ### CI configuration
 
@@ -50,6 +50,11 @@ Images are published to `ghcr.io/<owner>/portfolio` on push to `main` and on `v*
 | `GITHUB_TOKEN` | auto | Push weekly semver tags; log in to GHCR |
 | `GH_PAT` | secret | GitHub GraphQL fetch during `pnpm build` (`public_repo`, `read:user`, `user:email`) |
 | `EMAIL` | variable | Fallback contact email when GitHub profile email is unavailable |
+| `DEPLOY_API_URL` | secret | Dokploy deploy API endpoint |
+| `DEPLOY_APPLICATION_ID` | secret | Dokploy compose application ID |
+| `DEPLOY_TOKEN` | secret | Dokploy API key (`x-api-key`) |
+
+Create a GitHub **environment** named `dokploy` (Settings → Environments) if you use protection rules; deploy runs in that environment after each tag build.
 
 For local/Docker builds, set `GITHUB_TOKEN` and `EMAIL` in `.env` (same PAT scopes as `GH_PAT` for the token).
 
@@ -58,6 +63,7 @@ For local/Docker builds, set `GITHUB_TOKEN` and `EMAIL` in `.env` (same PAT scop
 Every **Monday 06:00 UTC**, [`.github/workflows/release-tag.yml`](.github/workflows/release-tag.yml):
 
 1. Bumps the patch semver tag on `main` (e.g. `v1.0.0` → `v1.0.1`) using Actions `GITHUB_TOKEN`
-2. Calls [`.github/workflows/docker-publish.yml`](.github/workflows/docker-publish.yml) to rebuild and push the image with fresh GitHub data
+2. Creates a [GitHub Release](https://docs.github.com/en/repositories/releasing-projects-on-github) for that tag (auto-generated notes)
+3. Calls [`.github/workflows/docker-publish.yml`](.github/workflows/docker-publish.yml) to build, push the image, and trigger Dokploy redeploy
 
-Manual tag pushes (`git push origin v1.0.x`) still trigger the Docker workflow via `on: push: tags`. Your host must pull the new image to deploy (Watchtower, `docker compose pull`, etc.).
+Manual tag pushes (`git push origin v1.0.x`) run the same Docker + Dokploy pipeline. Pushes to `main` alone do **not** build or deploy.

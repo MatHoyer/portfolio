@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag: ${{ steps.tag.outputs.tag }}
+      created: ${{ steps.tag.outputs.created }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,6 +29,7 @@ jobs:
           EXISTING=$(git tag --points-at HEAD | grep -E '^v[0-9]' | head -1 || true)
           if [ -n "$EXISTING" ]; then
             echo "tag=${EXISTING}" >> "$GITHUB_OUTPUT"
+            echo "created=false" >> "$GITHUB_OUTPUT"
             echo "HEAD already at ${EXISTING}, skipping new tag"
             exit 0
           fi
@@ -48,6 +50,22 @@ jobs:
           git tag -a "$TAG" -m "Weekly release ${TAG}"
           git push origin "$TAG"
           echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "created=true" >> "$GITHUB_OUTPUT"
+
+  create-release:
+    needs: bump-and-tag
+    if: needs.bump-and-tag.outputs.created == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "${{ needs.bump-and-tag.outputs.tag }}" \
+            --title "${{ needs.bump-and-tag.outputs.tag }}" \
+            --generate-notes
 
   publish:
     needs: bump-and-tag
