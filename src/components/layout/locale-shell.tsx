@@ -4,6 +4,7 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import { SwaggerLayout } from "@/components/swagger/swagger-layout";
 import type { Locale } from "@/i18n/routing";
+import { getAppVersion } from "@/lib/version";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,7 +35,7 @@ export async function LocaleShell({
       <body className="min-h-full font-sans">
         <ThemeProvider>
           <NextIntlClientProvider locale={locale} messages={messages}>
-            <SwaggerLayout>{children}</SwaggerLayout>
+            <SwaggerLayout appVersion={getAppVersion()}>{children}</SwaggerLayout>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

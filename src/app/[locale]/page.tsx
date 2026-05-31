@@ -6,16 +6,22 @@ import { RepoCard } from "@/components/swagger/repo-card";
 import { Link } from "@/i18n/navigation";
 import { getDeveloperData } from "@/lib/github";
 import { getAppVersion } from "@/lib/version";
-import { localeAlternates } from "@/lib/metadata";
+import { createSiteMetadata, localeAlternates, localeCanonical } from "@/lib/metadata";
 import { navItems } from "@/lib/nav";
 
 type Props = {
   params: Promise<{ locale: string }>;
 };
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+
   return {
-    alternates: localeAlternates("/"),
+    ...(await createSiteMetadata(locale)),
+    alternates: {
+      canonical: localeCanonical(locale, "/"),
+      ...localeAlternates("/"),
+    },
   };
 }
 

@@ -4,11 +4,16 @@ import { LocaleSelect } from "@/components/i18n/locale-select";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Link } from "@/i18n/navigation";
 import { navItems } from "@/lib/nav";
-import { getAppVersion } from "@/lib/version";
 import { useTranslations } from "next-intl";
 import { MethodBadge } from "./method-badge";
 
-export function SwaggerLayout({ children }: { children: React.ReactNode }) {
+export function SwaggerLayout({
+  appVersion,
+  children,
+}: {
+  appVersion: string;
+  children: React.ReactNode;
+}) {
   const t = useTranslations("nav");
   const tagKeys = [...new Set(navItems.map((item) => item.tagKey))];
 
@@ -22,7 +27,7 @@ export function SwaggerLayout({ children }: { children: React.ReactNode }) {
           <Link href="/" className="font-semibold hover:underline">
             Mathieu HOYER
           </Link>
-          <span className="font-mono text-xs text-white/70">{getAppVersion()}</span>
+          <span className="font-mono text-xs text-white/70">{appVersion}</span>
         </div>
         <div className="flex items-center gap-3">
           <ThemeToggle />
