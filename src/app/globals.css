@@ -185,6 +185,19 @@
   animation: terminal-blink 1s step-end infinite;
 }
 
+/* Shiki JSON panels (CodePanel) */
+.code-panel pre.shiki {
+  margin: 0;
+  padding: 0;
+  background-color: transparent !important;
+}
+
+.code-panel .shiki {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: inherit;
+  line-height: 1.5;
+}
+
 @theme inline {
   --color-swagger-bg: var(--swagger-bg);
   --color-swagger-surface: var(--swagger-surface);
