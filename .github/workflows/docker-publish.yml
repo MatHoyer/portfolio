@@ -24,6 +24,14 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
+      - name: Load secrets from Proton Pass
+        uses: gizmodlabs/load-secrets-proton-pass@e3cc6f29771ca384c33380a0e62c5f7aca60cef1 # v1.0.0
+        with:
+          personal-access-token: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
+        env:
+          GH_PAT: pass://Coding-prod/Github/GH_PUBLIC_REPO_PAT
+          EMAIL: pass://Coding-prod/Github/EMAIL
+
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
@@ -51,34 +59,39 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            GITHUB_TOKEN=${{ secrets.GH_PAT }}
-            EMAIL=${{ vars.EMAIL }}
+            GITHUB_TOKEN=${{ env.GH_PAT }}
+            EMAIL=${{ env.EMAIL }}
 
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-push
-    container: alpine:3.23
     environment: dokploy
     steps:
+      - name: Load secrets from Proton Pass
+        uses: gizmodlabs/load-secrets-proton-pass@e3cc6f29771ca384c33380a0e62c5f7aca60cef1 # v1.0.0
+        with:
+          personal-access-token: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
+        env:
+          DEPLOY_API_URL: pass://Coding-prod/Dokploy/DEPLOY_API_URL
+          DEPLOY_APPLICATION_ID: pass://Coding-prod/Dokploy/PORTFOLIO_APPLICATION_ID
+          DEPLOY_TOKEN: pass://Coding-prod/Dokploy/DEPLOY_TOKEN
+
       - name: Trigger Dokploy deploy
         env:
-          DEPLOY_API_URL: ${{ secrets.DEPLOY_API_URL }}
-          DEPLOY_APPLICATION_ID: ${{ secrets.DEPLOY_APPLICATION_ID }}
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
           RELEASE_TAG: ${{ inputs.ref || github.ref_name }}
         run: |
           set -euo pipefail
-          apk add --no-cache curl jq
+          command -v jq >/dev/null || sudo apt-get update && sudo apt-get install -y jq
           if [ -z "${DEPLOY_API_URL:-}" ]; then
-            echo "DEPLOY_API_URL secret is not set" >&2
+            echo "DEPLOY_API_URL is not set" >&2
             exit 1
           fi
           if [ -z "${DEPLOY_APPLICATION_ID:-}" ]; then
-            echo "DEPLOY_APPLICATION_ID secret is not set" >&2
+            echo "DEPLOY_APPLICATION_ID is not set" >&2
             exit 1
           fi
           if [ -z "${DEPLOY_TOKEN:-}" ]; then
-            echo "DEPLOY_TOKEN secret is not set" >&2
+            echo "DEPLOY_TOKEN is not set" >&2
             exit 1
           fi
           payload="$(jq -nc --arg id "$DEPLOY_APPLICATION_ID" '{composeId: $id}')"

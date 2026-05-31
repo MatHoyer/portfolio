@@ -45,14 +45,20 @@ Images are published to `ghcr.io/<owner>/portfolio` on `v*` tags only (not on pu
 
 ### CI configuration
 
-| Name | Kind | Used for |
-|------|------|----------|
-| `GITHUB_TOKEN` | auto | Push weekly semver tags; log in to GHCR |
-| `GH_PAT` | secret | GitHub GraphQL fetch during `pnpm build` (`public_repo`, `read:user`, `user:email`) |
-| `EMAIL` | variable | Fallback contact email when GitHub profile email is unavailable |
-| `DEPLOY_API_URL` | secret | Dokploy deploy API endpoint |
-| `DEPLOY_APPLICATION_ID` | secret | Dokploy compose application ID |
-| `DEPLOY_TOKEN` | secret | Dokploy API key (`x-api-key`) |
+Secrets are loaded from **Proton Pass** ([`gizmodlabs/load-secrets-proton-pass`](https://github.com/marketplace/actions/load-secrets-from-proton-pass) pinned to [`e3cc6f29`](https://github.com/Gizmodlabs/load-secrets-proton-pass/commit/e3cc6f29771ca384c33380a0e62c5f7aca60cef1) / v1.0.0) vault **`Coding-prod`**. The only secret stored in GitHub is the Proton Pass CLI PAT.
+
+1. Locally: `pass-cli pat create` (scoped to vault `Coding-prod`)
+2. GitHub → Settings → Secrets → Actions → `PROTON_PASS_PERSONAL_ACCESS_TOKEN` = full `pst_xxxx::TOKENKEY` value
+
+| Proton Pass item | Field | Workflow env |
+|------------------|-------|----------------|
+| `Github` | `GH_PUBLIC_REPO_PAT` | `GH_PAT` (Docker build / GitHub API) |
+| `Github` | `EMAIL` | `EMAIL` (contact fallback) |
+| `Dokploy` | `DEPLOY_API_URL` | Dokploy API URL |
+| `Dokploy` | `DEPLOY_APPLICATION_ID` | Compose application ID |
+| `Dokploy` | `DEPLOY_TOKEN` | API key (`x-api-key`) |
+
+`GITHUB_TOKEN` (auto) is still used for GHCR login and weekly tag pushes.
 
 Create a GitHub **environment** named `dokploy` (Settings → Environments) if you use protection rules; deploy runs in that environment after each tag build.
 
