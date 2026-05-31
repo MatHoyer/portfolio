@@ -24,12 +24,13 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - name: Load GitHub token from Proton Pass
+      - name: Load secrets from Proton Pass
         uses: gizmodlabs/load-secrets-proton-pass@e3cc6f29771ca384c33380a0e62c5f7aca60cef1 # v1.0.0
         with:
           personal-access-token: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
         env:
           GH_PAT: pass://Coding-prod/Github/GH_PUBLIC_REPO_PAT
+          NEXT_PUBLIC_SITE_URL: pass://Coding-prod/Portfolio/NEXT_PUBLIC_SITE_URL
 
       - name: Load contact email
         run: echo "EMAIL=${{ vars.EMAIL }}" >> "$GITHUB_ENV"
@@ -67,6 +68,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             APP_VERSION=${{ env.APP_VERSION }}
+            NEXT_PUBLIC_SITE_URL=${{ env.NEXT_PUBLIC_SITE_URL }}
           secrets: |
             github_token=${{ env.GH_PAT }}
             email=${{ env.EMAIL }}

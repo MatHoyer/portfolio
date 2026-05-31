@@ -14,6 +14,9 @@ COPY . .
 ARG APP_VERSION
 ENV APP_VERSION=${APP_VERSION}
 
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+
 # Secrets via BuildKit mounts only — never ARG/ENV (avoids layer leaks)
 RUN --mount=type=secret,id=github_token \
     --mount=type=secret,id=email \
