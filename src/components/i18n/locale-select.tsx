@@ -19,7 +19,7 @@ function LocaleOption({ locale, flagSize = 14 }: { locale: Locale; flagSize?: nu
   );
 }
 
-export function LocaleSelect() {
+export function LocaleSelect({ compact = false }: { compact?: boolean }) {
   const t = useTranslations("locale");
   const locale = useLocale() as Locale;
   const router = useRouter();
@@ -43,9 +43,24 @@ export function LocaleSelect() {
     >
       <SelectTrigger
         aria-label={t("label")}
-        className="h-8 w-auto min-w-34 border-white/20 bg-white/10 pr-1.5 pl-2 font-mono text-xs text-white hover:bg-white/15"
+        className={
+          compact
+            ? "h-8 w-auto min-w-0 border-white/20 bg-white/10 px-2 font-mono text-xs text-white hover:bg-white/15 sm:min-w-34 sm:pr-1.5 sm:pl-2"
+            : "h-8 w-auto min-w-34 border-white/20 bg-white/10 pr-1.5 pl-2 font-mono text-xs text-white hover:bg-white/15"
+        }
       >
-        <LocaleOption locale={locale} />
+        {compact ? (
+          <>
+            <span className="sm:hidden">
+              <LocaleFlag locale={locale} size={16} className="shrink-0" />
+            </span>
+            <span className="hidden sm:inline">
+              <LocaleOption locale={locale} />
+            </span>
+          </>
+        ) : (
+          <LocaleOption locale={locale} />
+        )}
       </SelectTrigger>
       <SelectContent>
         {routing.locales.map((loc) => (

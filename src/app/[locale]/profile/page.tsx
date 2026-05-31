@@ -53,7 +53,7 @@ export default async function ProfilePage({ params }: Props) {
     <div className="flex flex-col gap-8">
       <OperationBlock method="GET" path="/developer" summary={t("summary")}>
         <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
             <Avatar className="size-20 border-2 border-[var(--swagger-post)]">
               <AvatarImage src="https://github.com/MatHoyer.png" alt="Mathieu HOYER" />
               <AvatarFallback className="bg-swagger-surface-muted text-xl">MH</AvatarFallback>
@@ -88,7 +88,7 @@ export default async function ProfilePage({ params }: Props) {
                 {data.languagesCount.map((lang) => (
                   <div
                     key={lang.name}
-                    className="grid grid-cols-[7rem_minmax(0,1fr)_2.75rem] items-center gap-x-3"
+                    className="flex flex-col gap-1 sm:grid sm:grid-cols-[7rem_minmax(0,1fr)_2.75rem] sm:items-center sm:gap-x-3"
                   >
                     <span className="flex min-w-0 items-center gap-2 font-mono text-sm">
                       <LanguageIcon name={lang.name} size={18} className="shrink-0" />
@@ -96,22 +96,24 @@ export default async function ProfilePage({ params }: Props) {
                         {formatLanguageLabel(normalizeLanguageKey(lang.name))}
                       </span>
                     </span>
-                    <div className="h-2 min-w-0 overflow-hidden rounded bg-swagger-border">
-                      <div
-                        className="h-full bg-[var(--swagger-get)]"
-                        style={{ width: `${lang.percentage}%` }}
-                      />
+                    <div className="flex items-center gap-3 sm:contents">
+                      <div className="h-2 min-w-0 flex-1 overflow-hidden rounded bg-swagger-border sm:flex-none">
+                        <div
+                          className="h-full bg-[var(--swagger-get)]"
+                          style={{ width: `${lang.percentage}%` }}
+                        />
+                      </div>
+                      <span className="shrink-0 text-right font-mono text-xs tabular-nums text-swagger-muted sm:w-auto">
+                        {lang.percentage}%
+                      </span>
                     </div>
-                    <span className="text-right font-mono text-xs tabular-nums text-swagger-muted">
-                      {lang.percentage}%
-                    </span>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <a
               href="https://github.com/MatHoyer"
               target="_blank"

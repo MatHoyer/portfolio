@@ -13,7 +13,10 @@
     "repositories": "Repositories",
     "contact": "Contact",
     "privacy": "Privacy",
-    "footerStatic": "Static portfolio — no tracking cookies"
+    "footerStatic": "Static portfolio — no tracking cookies",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu",
+    "bottomNav": "Main navigation"
   },
   "locale": {
     "label": "Language",
