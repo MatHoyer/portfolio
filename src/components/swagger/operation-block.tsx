@@ -28,17 +28,19 @@ export function OperationBlock({
   return (
     <Collapsible open={open} onOpenChange={setOpen}>
       <div className="overflow-hidden rounded border border-swagger-border bg-swagger-surface shadow-sm">
-        <CollapsibleTrigger className="flex w-full items-center gap-3 border-b border-swagger-border px-4 py-3 text-left hover:bg-swagger-surface-muted">
-          <MethodBadge method={method} />
-          <span className="font-mono text-sm font-semibold text-swagger-text">{path}</span>
+        <CollapsibleTrigger className="flex w-full min-w-0 items-center gap-2 border-b border-swagger-border px-4 py-3 text-left hover:bg-swagger-surface-muted sm:gap-3">
+          <MethodBadge method={method} className="shrink-0" />
+          <span className="min-w-0 truncate font-mono text-sm font-semibold text-swagger-text">
+            {path}
+          </span>
           {summary && (
-            <span className="ml-auto hidden text-sm text-swagger-muted sm:inline">
+            <span className="hidden shrink-0 text-sm text-swagger-muted sm:ml-auto sm:inline">
               {summary}
             </span>
           )}
           <ChevronDown
             className={cn(
-              "ml-auto size-4 shrink-0 text-swagger-muted transition-transform",
+              "ms-auto size-4 shrink-0 text-swagger-muted transition-transform",
               open && "rotate-180",
             )}
           />
