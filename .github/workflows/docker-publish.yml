@@ -31,9 +31,7 @@ jobs:
         env:
           GH_PAT: pass://Coding-prod/Github/GH_PUBLIC_REPO_PAT
           NEXT_PUBLIC_SITE_URL: pass://Coding-prod/Portfolio/NEXT_PUBLIC_SITE_URL
-
-      - name: Load contact email
-        run: echo "EMAIL=${{ vars.EMAIL }}" >> "$GITHUB_ENV"
+          EMAIL: pass://Coding-prod/Portfolio/EMAIL
 
       - name: Set app version
         run: |
