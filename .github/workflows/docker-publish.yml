@@ -80,7 +80,7 @@ jobs:
         with:
           personal-access-token: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
         env:
-          GH_PRIVATE_PAT: pass://Coding-prod/Github/GH_PRIVATE_REPO_PAT
+          GH_PRIVATE_PAT: pass://Coding-prod/Github/GH_PERSONAL_OPS_PAT
 
       - name: Render and push compose to personal-ops
         env:
