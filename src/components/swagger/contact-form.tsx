@@ -6,24 +6,22 @@ import { Textarea } from "@/components/ui/textarea";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
-const EMAIL = "mathieuhoyer@gmail.com";
-
-export function ContactForm() {
+export function ContactForm({ email }: { email: string }) {
   const t = useTranslations("contact");
   const tCommon = useTranslations("common");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
 
   const sendEmail = () => {
-    window.location.href = `mailto:${EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
   };
 
   return (
     <div className="flex flex-col gap-4">
       <p className="text-sm text-swagger-muted">
         {t("intro")}{" "}
-        <a href={`mailto:${EMAIL}`} className="text-swagger-link hover:underline">
-          {EMAIL}
+        <a href={`mailto:${email}`} className="text-swagger-link hover:underline">
+          {email}
         </a>
       </p>
       <form

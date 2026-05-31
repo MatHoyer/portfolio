@@ -10,7 +10,9 @@ RUN pnpm install --frozen-lockfile
 COPY . .
 
 ARG GITHUB_TOKEN
+ARG EMAIL
 ENV GITHUB_TOKEN=$GITHUB_TOKEN
+ENV EMAIL=$EMAIL
 
 RUN pnpm build
 
