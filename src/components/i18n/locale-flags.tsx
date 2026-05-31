@@ -1,4 +1,6 @@
-import type { ReactNode } from "react";
+"use client";
+
+import { useId, type ReactNode } from "react";
 import type { Locale } from "@/i18n/routing";
 
 type FlagProps = {
@@ -27,13 +29,43 @@ function FlagFrame({
 }
 
 function EnFlag({ size, className }: FlagProps) {
+  const clipId = `en-flag-${useId().replace(/:/g, "")}`;
+  const stripeH = 16 / 7;
   return (
     <FlagFrame size={size} className={className}>
-      <rect width="24" height="16" rx="1.5" fill="#012169" />
-      <path fill="#fff" d="M0 0l24 16V0H0zm24 0L0 16h24V0z" />
-      <path fill="#C8102E" d="M10.5 0v16h3V0h-3zM0 6.5v3h24v-3H0z" />
-      <path fill="#fff" d="M0 0l9 6H0V0zm24 0H15l9 6V0zM0 16l9-6H0v6zm24 0v-6h-9l9 6z" />
-      <path fill="#C8102E" d="M0 0l10.5 7V0H0zm24 0H13.5v7L24 0zM0 16h10.5V9L0 16zm13.5 0H24L13.5 9v7z" />
+      <clipPath id={clipId}>
+        <rect width="24" height="16" rx="1.5" />
+      </clipPath>
+      <g clipPath={`url(#${clipId})`}>
+        {Array.from({ length: 7 }, (_, i) => (
+          <rect
+            key={i}
+            y={i * stripeH}
+            width="24"
+            height={stripeH + 0.5}
+            fill={i % 2 === 0 ? "#B22234" : "#fff"}
+          />
+        ))}
+        <rect width="9.6" height="8.2" fill="#3C3B6E" />
+        {[
+          [1.4, 1.2],
+          [3.6, 1.2],
+          [5.8, 1.2],
+          [8, 1.2],
+          [2.5, 2.8],
+          [4.7, 2.8],
+          [6.9, 2.8],
+          [1.4, 4.4],
+          [3.6, 4.4],
+          [5.8, 4.4],
+          [8, 4.4],
+          [2.5, 6],
+          [4.7, 6],
+          [6.9, 6],
+        ].map(([cx, cy], i) => (
+          <circle key={i} cx={cx} cy={cy} r="0.55" fill="#fff" />
+        ))}
+      </g>
     </FlagFrame>
   );
 }

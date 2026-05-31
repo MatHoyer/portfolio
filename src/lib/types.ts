@@ -13,7 +13,7 @@ export type Repository = {
 };
 
 export type DeveloperData = {
-  email: string | null;
+  email: string;
   company: string | null;
   location: string | null;
   totalCommitContributions: number;

@@ -43,14 +43,15 @@ If a GitHub token was ever committed to this repository, **revoke it immediately
 
 Images are published to `ghcr.io/<owner>/portfolio` on push to `main` and on `v*` tags. Set the package visibility to **public** in GitHub → Packages after the first publish.
 
-### CI secrets
+### CI configuration
 
-| Secret | Used for |
-|--------|----------|
-| `GITHUB_TOKEN` (auto) | Push weekly semver tags; log in to GHCR |
-| `GH_PAT` | GitHub GraphQL fetch during `pnpm build` in Docker (`public_repo`, `read:user`, `user:email`) |
+| Name | Kind | Used for |
+|------|------|----------|
+| `GITHUB_TOKEN` | auto | Push weekly semver tags; log in to GHCR |
+| `GH_PAT` | secret | GitHub GraphQL fetch during `pnpm build` (`public_repo`, `read:user`, `user:email`) |
+| `EMAIL` | variable | Fallback contact email when GitHub profile email is unavailable |
 
-For local/Docker builds, set `GITHUB_TOKEN` in `.env` or `.env.local` (same PAT scopes as `GH_PAT`).
+For local/Docker builds, set `GITHUB_TOKEN` and `EMAIL` in `.env` (same PAT scopes as `GH_PAT` for the token).
 
 ### Weekly refresh
 

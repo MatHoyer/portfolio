@@ -133,6 +133,16 @@ async function fetchGitHubUser(): Promise<GitHubUserResponse> {
   return json.data.user;
 }
 
+function resolveContactEmail(githubEmail: string | null): string {
+  const email = githubEmail?.trim() || process.env.EMAIL?.trim();
+  if (!email) {
+    throw new Error(
+      "Contact email required: GitHub profile email (user:email scope) or EMAIL in .env",
+    );
+  }
+  return email;
+}
+
 function transformUserData(user: GitHubUserResponse): DeveloperData {
   const nodes = user.repositories.nodes.filter((repo) => repo.name !== EXCLUDED_REPO);
 
@@ -146,7 +156,7 @@ function transformUserData(user: GitHubUserResponse): DeveloperData {
   }));
 
   return {
-    email: user.email,
+    email: resolveContactEmail(user.email),
     company: user.company,
     location: user.location,
     totalCommitContributions: user.contributionsCollection.totalCommitContributions,
