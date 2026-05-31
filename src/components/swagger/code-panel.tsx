@@ -1,20 +1,22 @@
+import { highlightJson } from "@/lib/shiki";
 import { cn } from "@/lib/utils";
 
-export function CodePanel({
+export async function CodePanel({
   data,
   className,
 }: {
   data: unknown;
   className?: string;
 }) {
+  const html = await highlightJson(data);
+
   return (
-    <pre
+    <div
       className={cn(
-        "overflow-x-auto rounded border border-swagger-border bg-[var(--swagger-code-bg)] p-4 font-mono text-sm text-[var(--swagger-code-text)]",
+        "code-panel overflow-x-auto rounded border border-swagger-border bg-[var(--swagger-code-bg)] p-4 font-mono text-sm",
         className,
       )}
-    >
-      <code>{JSON.stringify(data, null, 2)}</code>
-    </pre>
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   );
 }
