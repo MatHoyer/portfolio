@@ -23,6 +23,12 @@
     "en": "Anglais",
     "fr": "Français"
   },
+  "theme": {
+    "label": "Thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  },
   "loader": {
     "summary": "Chargement de l'endpoint…",
     "windowTitle": "bash — portfolio",
