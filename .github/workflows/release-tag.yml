@@ -59,6 +59,12 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump-and-tag.outputs.tag }}
+          fetch-depth: 0
+
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
