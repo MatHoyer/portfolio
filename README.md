@@ -53,6 +53,7 @@ Secrets are loaded from **Proton Pass** ([`gizmodlabs/load-secrets-proton-pass`]
 | Source | Name | Workflow env |
 |--------|------|----------------|
 | Proton `Github` / `GH_PUBLIC_REPO_PAT` | secret | `GH_PAT` (Docker build / GitHub API) |
+| Proton `Portfolio` / `NEXT_PUBLIC_SITE_URL` | secret | Canonical URL for hreflang metadata |
 | GitHub variable | `EMAIL` | `EMAIL` (contact fallback) |
 | Proton `Dokploy` / `DEPLOY_API_URL` | secret | Dokploy API URL |
 | Proton `Dokploy` / `PORTFOLIO_APPLICATION_ID` | secret | Compose application ID |
