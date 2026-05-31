@@ -33,7 +33,7 @@ export function SwaggerLayout({
           </span>
         </div>
         <div className="flex shrink-0 items-center gap-2 md:gap-3">
-          <ThemeToggle />
+          <ThemeToggle compact />
           <LocaleSelect compact />
           <a
             href="https://github.com/MatHoyer"
