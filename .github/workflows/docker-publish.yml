@@ -24,13 +24,15 @@ jobs:
         with:
           ref: ${{ inputs.ref || github.ref }}
 
-      - name: Load secrets from Proton Pass
+      - name: Load GitHub token from Proton Pass
         uses: gizmodlabs/load-secrets-proton-pass@e3cc6f29771ca384c33380a0e62c5f7aca60cef1 # v1.0.0
         with:
           personal-access-token: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN }}
         env:
           GH_PAT: pass://Coding-prod/Github/GH_PUBLIC_REPO_PAT
-          EMAIL: pass://Coding-prod/Github/EMAIL
+
+      - name: Load contact email
+        run: echo "EMAIL=${{ vars.EMAIL }}" >> "$GITHUB_ENV"
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -58,9 +60,9 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          build-args: |
-            GITHUB_TOKEN=${{ env.GH_PAT }}
-            EMAIL=${{ env.EMAIL }}
+          secrets: |
+            github_token=${{ env.GH_PAT }}
+            email=${{ env.EMAIL }}
 
   deploy:
     runs-on: ubuntu-latest

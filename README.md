@@ -50,13 +50,15 @@ Secrets are loaded from **Proton Pass** ([`gizmodlabs/load-secrets-proton-pass`]
 1. Locally: `pass-cli pat create` (scoped to vault `Coding-prod`)
 2. GitHub → Settings → Secrets → Actions → `PROTON_PASS_PERSONAL_ACCESS_TOKEN` = full `pst_xxxx::TOKENKEY` value
 
-| Proton Pass item | Field | Workflow env |
-|------------------|-------|----------------|
-| `Github` | `GH_PUBLIC_REPO_PAT` | `GH_PAT` (Docker build / GitHub API) |
-| `Github` | `EMAIL` | `EMAIL` (contact fallback) |
-| `Dokploy` | `DEPLOY_API_URL` | Dokploy API URL |
-| `Dokploy` | `DEPLOY_APPLICATION_ID` | Compose application ID |
-| `Dokploy` | `DEPLOY_TOKEN` | API key (`x-api-key`) |
+| Source | Name | Workflow env |
+|--------|------|----------------|
+| Proton `Github` / `GH_PUBLIC_REPO_PAT` | secret | `GH_PAT` (Docker build / GitHub API) |
+| GitHub variable | `EMAIL` | `EMAIL` (contact fallback) |
+| Proton `Dokploy` / `DEPLOY_API_URL` | secret | Dokploy API URL |
+| Proton `Dokploy` / `PORTFOLIO_APPLICATION_ID` | secret | Compose application ID |
+| Proton `Dokploy` / `DEPLOY_TOKEN` | secret | API key (`x-api-key`) |
+
+Proton field names are **case-sensitive** — must match the item in Pass exactly (`pass-cli item view pass://Coding-prod/Dokploy`).
 
 `GITHUB_TOKEN` (auto) is still used for GHCR login and weekly tag pushes.
 

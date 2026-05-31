@@ -1,3 +1,5 @@
+# syntax=docker/dockerfile:1
+
 FROM node:22-alpine AS builder
 
 WORKDIR /app
@@ -9,12 +11,12 @@ RUN pnpm install --frozen-lockfile
 
 COPY . .
 
-ARG GITHUB_TOKEN
-ARG EMAIL
-ENV GITHUB_TOKEN=$GITHUB_TOKEN
-ENV EMAIL=$EMAIL
-
-RUN pnpm build
+# Secrets via BuildKit mounts only — never ARG/ENV (avoids layer leaks)
+RUN --mount=type=secret,id=github_token \
+    --mount=type=secret,id=email \
+    export GITHUB_TOKEN="$(cat /run/secrets/github_token)" && \
+    export EMAIL="$(cat /run/secrets/email)" && \
+    pnpm build
 
 FROM nginx:alpine
 
