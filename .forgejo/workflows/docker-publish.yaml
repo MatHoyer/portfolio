@@ -1,0 +1,164 @@
+# Builds the portfolio image, pushes it to the Forgejo container registry, then
+# pins the homelab/ops Deployment to the new @sha256 digest so ArgoCD deploys it.
+#
+# Notes (mirrors homelab/ops .forgejo/workflows/build-pass-sync.yaml):
+#  - Runs on the in-cluster KEDA runner (label `docker`) inside
+#    catthehacker/ubuntu:act-22.04 — the bare runner has no node/docker CLI, which
+#    actions/checkout (a JS action) and the build below need.
+#  - dind sidecar listens on 0.0.0.0:2375, reachable via the docker0 gateway
+#    172.17.0.1 (localhost in the job container has no daemon).
+#  - amd64 only: the workload node is amd64; the arm64 control plane is tainted.
+#  - The auto GITHUB_TOKEN can't push org packages. Registry creds + image name +
+#    build inputs all come from Proton Pass via pass-cli, unlocked by the
+#    PROTON_PASS_PERSONAL_ACCESS_TOKEN_PROD secret — single source of truth.
+#  - After push, the job clones homelab/ops, pins the portfolio Deployment image
+#    to the new digest, and commits as ci-bot (Pass item Forgejo-ops). ArgoCD
+#    syncs the pinned digest — proper GitOps, auditable and rollbackable.
+#
+# Proton Pass items consumed (vault Coding-prod):
+#   Forgejo-registry/REGISTRY_USER         registry login user
+#   Forgejo-registry/REGISTRY_TOKEN        registry login token
+#   Portfolio/REGISTRY_IMAGE               full image base, e.g.
+#                                          git.mathieuhoyer.fr/matmat/portfolio
+#   Portfolio/NEXT_PUBLIC_SITE_URL         build-arg (baked into static export)
+#   Portfolio/EMAIL                        build secret (build-time data fetch)
+#   Github/GH_PUBLIC_REPO_PAT              build secret (github_token)
+#   Forgejo-ops/OPS_REPO_HOST              host of the ops repo, e.g. git.mathieuhoyer.fr
+#   Forgejo-ops/OPS_REPO_USER              ci-bot user (also git commit author)
+#   Forgejo-ops/OPS_REPO_TOKEN             ci-bot token with write to homelab/ops
+name: docker-publish
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: Git ref to build (tag or branch)
+        required: false
+        type: string
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Git ref to build (tag or branch)
+        required: false
+        type: string
+
+jobs:
+  build-and-push:
+    runs-on: docker
+    container:
+      image: catthehacker/ubuntu:act-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+
+      # Runner config injects DOCKER_HOST=tcp://localhost:2375, but localhost in
+      # the job container has no daemon. Point at the dind sidecar instead.
+      - name: Resolve docker host
+        run: echo "DOCKER_HOST=tcp://172.17.0.1:2375" >> "$GITHUB_ENV"
+
+      - name: Compute version tags
+        run: |
+          set -euo pipefail
+          ref="${{ inputs.ref || github.ref_name }}"
+          ver="${ref#v}"
+          echo "IMAGE_TAG=${ver}" >> "$GITHUB_ENV"
+          echo "MAJOR_MINOR=${ver%.*}" >> "$GITHUB_ENV"
+          echo "SHORT_SHA=${GITHUB_SHA:0:7}" >> "$GITHUB_ENV"
+
+      - name: Build, push, and pin ops manifest
+        env:
+          PROTON_PASS_PERSONAL_ACCESS_TOKEN_PROD: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN_PROD }}
+        run: |
+          set -euo pipefail
+
+          # Install pass-cli (glibc x86_64; catthehacker ubuntu is glibc).
+          ver=2.2.0
+          curl -fsSL "https://proton.me/download/pass-cli/${ver}/pass-cli-linux-x86_64" \
+            -o /usr/local/bin/pass-cli
+          chmod +x /usr/local/bin/pass-cli
+
+          # Headless session: filesystem key provider, session in the workspace.
+          export PROTON_PASS_KEY_PROVIDER=fs
+          export PROTON_PASS_SESSION_DIR="$PWD/.pass-session"
+          mkdir -p "$PROTON_PASS_SESSION_DIR"
+
+          pass-cli logout >/dev/null 2>&1 || true
+          pass-cli login --pat "$PROTON_PASS_PERSONAL_ACCESS_TOKEN_PROD" >/dev/null
+          trap 'pass-cli logout >/dev/null 2>&1 || true' EXIT
+
+          # ---- Build + push to the Forgejo registry --------------------------
+          cat > /tmp/build.env <<'EOF'
+          REGISTRY_USER=pass://Coding-prod/Forgejo-registry/REGISTRY_USER
+          REGISTRY_TOKEN=pass://Coding-prod/Forgejo-registry/REGISTRY_TOKEN
+          PORTFOLIO_IMAGE=pass://Coding-prod/Portfolio/REGISTRY_IMAGE
+          NEXT_PUBLIC_SITE_URL=pass://Coding-prod/Portfolio/NEXT_PUBLIC_SITE_URL
+          EMAIL=pass://Coding-prod/Portfolio/EMAIL
+          GH_PAT=pass://Coding-prod/Github/GH_PUBLIC_REPO_PAT
+          EOF
+
+          pass-cli run --env-file /tmp/build.env -- bash -c '
+            set -euo pipefail
+            export DOCKER_BUILDKIT=1
+            registry="${PORTFOLIO_IMAGE%%/*}"
+            echo "$REGISTRY_TOKEN" | docker login "$registry" -u "$REGISTRY_USER" --password-stdin
+
+            # Dockerfile pulls these via BuildKit secret mounts (never ARG/ENV).
+            printf "%s" "$GH_PAT" > /tmp/github_token
+            printf "%s" "$EMAIL"  > /tmp/email
+            trap "rm -f /tmp/github_token /tmp/email" EXIT
+
+            docker build \
+              --build-arg APP_VERSION="$IMAGE_TAG" \
+              --build-arg NEXT_PUBLIC_SITE_URL="$NEXT_PUBLIC_SITE_URL" \
+              --secret id=github_token,src=/tmp/github_token \
+              --secret id=email,src=/tmp/email \
+              -t "$PORTFOLIO_IMAGE:$IMAGE_TAG" \
+              -t "$PORTFOLIO_IMAGE:$MAJOR_MINOR" \
+              -t "$PORTFOLIO_IMAGE:$SHORT_SHA" \
+              -t "$PORTFOLIO_IMAGE:latest" \
+              .
+
+            docker push "$PORTFOLIO_IMAGE:$IMAGE_TAG"
+            docker push "$PORTFOLIO_IMAGE:$MAJOR_MINOR"
+            docker push "$PORTFOLIO_IMAGE:$SHORT_SHA"
+            docker push "$PORTFOLIO_IMAGE:latest"
+
+            # Capture the immutable digest ref for the GitOps manifest pin.
+            docker inspect --format "{{index .RepoDigests 0}}" "$PORTFOLIO_IMAGE:$IMAGE_TAG" > image-digest.txt
+          '
+
+          # ---- GitOps bump: pin the ops Deployment to the new digest ----------
+          export DIGEST="$(cat image-digest.txt)"
+          echo "pinning ops manifest to $DIGEST"
+
+          cat > /tmp/ops.env <<'EOF'
+          OPS_REPO_HOST=pass://Coding-prod/Forgejo-ops/OPS_REPO_HOST
+          OPS_REPO_USER=pass://Coding-prod/Forgejo-ops/OPS_REPO_USER
+          OPS_REPO_TOKEN=pass://Coding-prod/Forgejo-ops/OPS_REPO_TOKEN
+          EOF
+
+          pass-cli run --env-file /tmp/ops.env -- bash -c '
+            set -euo pipefail
+            f=clusters/homelab/infrastructure/portfolio/deployment.yaml
+            remote="https://${OPS_REPO_USER}:${OPS_REPO_TOKEN}@${OPS_REPO_HOST}/homelab/ops.git"
+
+            tmp="$(mktemp -d)"
+            git clone --depth 1 "$remote" "$tmp"
+            cd "$tmp"
+            git config user.name  "$OPS_REPO_USER"
+            git config user.email "mathieuhoyer+ci-bot@gmail.com"
+
+            sed -i -E "s#^([[:space:]]*image:[[:space:]]*).*portfolio.*#\1${DIGEST}#" "$f"
+
+            if git diff --quiet -- "$f"; then
+              echo "ops manifest already at ${DIGEST}; nothing to commit"
+              exit 0
+            fi
+
+            git add "$f"
+            git commit -m "ci(portfolio): pin image to ${DIGEST}"
+            git push "$remote" HEAD:main
+          '
