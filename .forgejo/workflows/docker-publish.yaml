@@ -16,16 +16,16 @@
 #    syncs the pinned digest — proper GitOps, auditable and rollbackable.
 #
 # Proton Pass items consumed (vault Coding-prod):
-#   Forgejo-registry/REGISTRY_USER         registry login user
-#   Forgejo-registry/REGISTRY_TOKEN        registry login token
-#   Portfolio/REGISTRY_IMAGE               full image base, e.g.
-#                                          git.mathieuhoyer.fr/matmat/portfolio
-#   Portfolio/NEXT_PUBLIC_SITE_URL         build-arg (baked into static export)
-#   Portfolio/EMAIL                        build secret (build-time data fetch)
-#   Github/GH_PUBLIC_REPO_PAT              build secret (github_token)
-#   Forgejo-ops/OPS_REPO_HOST              host of the ops repo, e.g. git.mathieuhoyer.fr
-#   Forgejo-ops/OPS_REPO_USER              ci-bot user (also git commit author)
-#   Forgejo-ops/OPS_REPO_TOKEN             ci-bot token with write to homelab/ops
+#   Forgejo-registry/REGISTRY_USER            registry login user
+#   Forgejo-registry/REGISTRY_TOKEN           registry login token
+#   Forgejo-registry/PORTFOLIO_REGISTRY_IMAGE full image base, e.g.
+#                                             git.mathieuhoyer.fr/matmat/portfolio
+#   Portfolio/NEXT_PUBLIC_SITE_URL            build-arg (baked into static export)
+#   Portfolio/EMAIL                           build secret (build-time data fetch)
+#   Github/GH_PUBLIC_REPO_PAT                 build secret (github_token)
+#   Forgejo-ops/OPS_REPO_HOST                 host of the ops repo, e.g. git.mathieuhoyer.fr
+#   Forgejo-ops/OPS_REPO_USER                 ci-bot user (also git commit author)
+#   Forgejo-ops/OPS_REPO_TOKEN                ci-bot token with write to homelab/ops
 name: docker-publish
 on:
   workflow_call:
@@ -93,7 +93,7 @@ jobs:
           cat > /tmp/build.env <<'EOF'
           REGISTRY_USER=pass://Coding-prod/Forgejo-registry/REGISTRY_USER
           REGISTRY_TOKEN=pass://Coding-prod/Forgejo-registry/REGISTRY_TOKEN
-          PORTFOLIO_IMAGE=pass://Coding-prod/Portfolio/REGISTRY_IMAGE
+          PORTFOLIO_IMAGE=pass://Coding-prod/Forgejo-registry/PORTFOLIO_REGISTRY_IMAGE
           NEXT_PUBLIC_SITE_URL=pass://Coding-prod/Portfolio/NEXT_PUBLIC_SITE_URL
           EMAIL=pass://Coding-prod/Portfolio/EMAIL
           GH_PAT=pass://Coding-prod/Github/GH_PUBLIC_REPO_PAT
