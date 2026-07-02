@@ -36,7 +36,7 @@ on:
         type: string
   push:
     tags:
-      - "v*"
+      - "*.*.*"
   workflow_dispatch:
     inputs:
       ref:
