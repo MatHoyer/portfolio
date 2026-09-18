@@ -1,12 +1,11 @@
-# Weekly: run scripts/create-tag.mjs patch (bump package.json, commit, push an
-# X.Y.Z tag authored by ci-bot), create a
-# Forgejo release for it, then build+publish the image for that tag.
+# Weekly: run scripts/create-tag.mjs patch (same script as a manual `pnpm release`):
+# lint + typecheck, bump package.json, commit, tag X.Y.Z, push branch and tag.
+# The docker-publish workflow then catches the tag push, builds/deploys and
+# creates the Forgejo release.
 #
-# The tag is pushed with the workflow's built-in token (which actions/checkout
-# persists), so it does NOT retrigger docker-publish's `push: tags` event —
-# Forgejo suppresses runs caused by the automatic token. The build is instead
-# chained explicitly via the reusable `publish` job below, so it runs exactly
-# once. The tag object's author/committer is set to ci-bot.
+# The push MUST use a personal token (secret RELEASE_PAT, write access to this
+# repo, ideally the ci-bot user's): pushes made with the automatic workflow token
+# don't trigger other workflows, so docker-publish would never fire.
 name: release-tag
 on:
   schedule:
@@ -21,17 +20,14 @@ jobs:
     runs-on: docker
     container:
       image: catthehacker/ubuntu:act-22.04
-    outputs:
-      tag: ${{ steps.tag.outputs.tag }}
-      created: ${{ steps.tag.outputs.created }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
+          token: ${{ secrets.RELEASE_PAT }}
 
       - name: Bump and push tag
-        id: tag
         run: |
           set -euo pipefail
           git config --global --add safe.directory "$PWD"
@@ -39,14 +35,12 @@ jobs:
           # Nothing new since the last release: skip.
           EXISTING=$(git tag --points-at HEAD | grep -E '^[0-9]' | head -1 || true)
           if [ -n "$EXISTING" ]; then
-            echo "tag=${EXISTING}" >> "$GITHUB_OUTPUT"
-            echo "created=false" >> "$GITHUB_OUTPUT"
             echo "HEAD already at ${EXISTING}, skipping new tag"
             exit 0
           fi
 
-          # Release commit + tag authored by ci-bot; pushed via the
-          # checkout-persisted auto token.
+          # Release commit + tag authored by ci-bot; pushed with RELEASE_PAT (persisted by
+          # actions/checkout).
           git config --global user.name  "ci-bot"
           git config --global user.email "mathieuhoyer+ci-bot@gmail.com"
 
@@ -55,44 +49,3 @@ jobs:
           corepack enable
           pnpm install --frozen-lockfile
           node scripts/create-tag.mjs patch
-
-          TAG=$(node -p "require('./package.json').version")
-          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
-          echo "created=true" >> "$GITHUB_OUTPUT"
-
-  create-release:
-    needs: bump-and-tag
-    if: needs.bump-and-tag.outputs.created == 'true'
-    runs-on: docker
-    container:
-      image: catthehacker/ubuntu:act-22.04
-    steps:
-      - name: Create Forgejo release
-        env:
-          TOKEN: ${{ github.token }}
-          TAG: ${{ needs.bump-and-tag.outputs.tag }}
-        run: |
-          set -euo pipefail
-          api="${GITHUB_SERVER_URL}/api/v1/repos/${GITHUB_REPOSITORY}/releases"
-          payload="$(jq -nc --arg t "$TAG" '{tag_name:$t, name:$t, body:("Automated weekly release " + $t)}')"
-          out="$(mktemp)"
-          trap 'rm -f "$out"' EXIT
-          code=$(curl -sS -o "$out" -w "%{http_code}" -X POST "$api" \
-            -H "accept: application/json" \
-            -H "Content-Type: application/json" \
-            -H "Authorization: token ${TOKEN}" \
-            -d "$payload")
-          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
-            echo "Forgejo release API HTTP $code — body:" >&2
-            cat "$out" >&2
-            exit 1
-          fi
-          echo "Release created for ${TAG}"
-
-  publish:
-    needs: bump-and-tag
-    if: needs.bump-and-tag.outputs.created == 'true'
-    uses: ./.forgejo/workflows/docker-publish.yaml
-    secrets: inherit
-    with:
-      ref: ${{ needs.bump-and-tag.outputs.tag }}

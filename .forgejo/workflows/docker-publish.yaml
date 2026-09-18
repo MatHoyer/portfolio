@@ -28,12 +28,6 @@
 #   Forgejo-ops/OPS_REPO_TOKEN                ci-bot token with write to homelab/ops
 name: docker-publish
 on:
-  workflow_call:
-    inputs:
-      ref:
-        description: Git ref to build (tag or branch)
-        required: false
-        type: string
   push:
     tags:
       - "*.*.*"
@@ -43,6 +37,9 @@ on:
         description: Git ref to build (tag or branch)
         required: false
         type: string
+
+permissions:
+  contents: write
 
 jobs:
   build-and-push:
@@ -162,3 +159,52 @@ jobs:
             git commit -m "ci(portfolio): pin image to ${DIGEST}"
             git push "$remote" HEAD:main
           '
+
+  # Once the image is built and the ops manifest pinned, publish the Forgejo
+  # release for the tag (idempotent: skipped if the release already exists).
+  create-release:
+    needs: build-and-push
+    runs-on: docker
+    container:
+      image: catthehacker/ubuntu:act-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.ref }}
+          fetch-depth: 0
+
+      - name: Create Forgejo release
+        env:
+          TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.ref || github.ref_name }}
+        run: |
+          set -euo pipefail
+          git config --global --add safe.directory "$PWD"
+          api="${GITHUB_SERVER_URL}/api/v1/repos/${GITHUB_REPOSITORY}/releases"
+
+          code=$(curl -sS -o /dev/null -w "%{http_code}" \
+            -H "Authorization: token ${TOKEN}" "${api}/tags/${TAG}")
+          if [ "$code" = "200" ]; then
+            echo "Release for ${TAG} already exists; nothing to do"
+            exit 0
+          fi
+
+          # Notes: commits since the previous tag.
+          prev="$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || true)"
+          range="${prev:+${prev}..}${TAG}"
+          notes="$(git log "$range" --no-merges --pretty='- %s')"
+
+          payload="$(jq -nc --arg t "$TAG" --arg b "$notes" '{tag_name:$t, name:$t, body:$b}')"
+          out="$(mktemp)"
+          trap 'rm -f "$out"' EXIT
+          code=$(curl -sS -o "$out" -w "%{http_code}" -X POST "$api" \
+            -H "accept: application/json" \
+            -H "Content-Type: application/json" \
+            -H "Authorization: token ${TOKEN}" \
+            -d "$payload")
+          if [ "$code" -lt 200 ] || [ "$code" -ge 300 ]; then
+            echo "Forgejo release API HTTP $code — body:" >&2
+            cat "$out" >&2
+            exit 1
+          fi
+          echo "Release created for ${TAG}"
