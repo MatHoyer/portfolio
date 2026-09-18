@@ -41,7 +41,7 @@ If a GitHub token was ever committed to this repository, **revoke it immediately
 
 ## GHCR
 
-Images are published to `ghcr.io/<owner>/portfolio` on `v*` tags only (not on push to `main`). Set the package visibility to **public** in GitHub → Packages after the first publish.
+Images are published to `ghcr.io/<owner>/portfolio` on `*.*.*` tags only (not on push to `main`). Set the package visibility to **public** in GitHub → Packages after the first publish.
 
 ### CI configuration
 
@@ -71,8 +71,8 @@ For local/Docker builds, set `GITHUB_TOKEN` and `EMAIL` in `.env` (same PAT scop
 
 Every **Monday 06:00 UTC**, [`.github/workflows/release-tag.yml`](.github/workflows/release-tag.yml):
 
-1. Bumps the patch semver tag on `main` (e.g. `v1.0.0` → `v1.0.1`) using Actions `GITHUB_TOKEN`
+1. Bumps the patch semver tag on `main` (e.g. `1.0.0` → `1.0.1`) using Actions `GITHUB_TOKEN`
 2. Creates a [GitHub Release](https://docs.github.com/en/repositories/releasing-projects-on-github) for that tag (auto-generated notes)
 3. Calls [`.github/workflows/docker-publish.yml`](.github/workflows/docker-publish.yml) to build, push the image, and trigger Dokploy redeploy
 
-Manual tag pushes (`git push origin v1.0.x`) run the same Docker + Dokploy pipeline. Pushes to `main` alone do **not** build or deploy.
+Manual tag pushes (`git push origin 1.0.x`) run the same Docker + Dokploy pipeline. Pushes to `main` alone do **not** build or deploy.
