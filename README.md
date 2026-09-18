@@ -69,7 +69,7 @@ For local/Docker builds, set `GITHUB_TOKEN` and `EMAIL` in `.env` (same PAT scop
 
 ### Weekly refresh
 
-Every **Monday 06:00 UTC**, [`.github/workflows/release-tag.yml`](.github/workflows/release-tag.yml):
+Every **Monday 10:00 UTC**, [`.github/workflows/release-tag.yml`](.github/workflows/release-tag.yml):
 
 1. Bumps the patch semver tag on `main` (e.g. `1.0.0` → `1.0.1`) using Actions `GITHUB_TOKEN`
 2. Creates a [GitHub Release](https://docs.github.com/en/repositories/releasing-projects-on-github) for that tag (auto-generated notes)
