@@ -53,9 +53,10 @@ jobs:
             -o /usr/local/bin/pass-cli
           chmod +x /usr/local/bin/pass-cli
 
-          # Headless session: filesystem key provider, session in the workspace.
+          # Headless session: filesystem key provider, session outside the workspace
+          # (an untracked dir in the repo would fail the release script clean-tree check).
           export PROTON_PASS_KEY_PROVIDER=fs
-          export PROTON_PASS_SESSION_DIR="$PWD/.pass-session"
+          export PROTON_PASS_SESSION_DIR="/tmp/pass-session"
           mkdir -p "$PROTON_PASS_SESSION_DIR"
 
           pass-cli logout >/dev/null 2>&1 || true
