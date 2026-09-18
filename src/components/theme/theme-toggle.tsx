@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 const themes = ["light", "dark", "system"] as const;
 type ThemeValue = (typeof themes)[number];
@@ -42,9 +42,11 @@ export function ThemeToggle({
 }) {
   const t = useTranslations("theme");
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   const current = (theme ?? "system") as ThemeValue;
   const CurrentIcon = themeIcons[current];
