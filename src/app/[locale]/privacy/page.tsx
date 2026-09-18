@@ -58,10 +58,10 @@ export default async function PrivacyPage({ params }: Props) {
           <p className="text-sm text-swagger-muted">
             {t("questions")}{" "}
             <a
-              href="mailto:mathieuhoyer@gmail.com"
+              href="mailto:contact@mathieuhoyer.fr"
               className="text-swagger-link hover:underline"
             >
-              mathieuhoyer@gmail.com
+              contact@mathieuhoyer.fr
             </a>
           </p>
         </div>
