@@ -1,4 +1,5 @@
-# Weekly: run scripts/create-tag.mjs patch (same script as a manual `pnpm release`):
+# Weekly (always, even with no new commits: the image bakes in GitHub data at
+# build time, so a rebuild refreshes it): run scripts/create-tag.mjs patch (same script as a manual `pnpm release`):
 # lint + typecheck, bump package.json, commit, tag X.Y.Z, push branch and tag.
 # The docker-publish workflow then catches the tag push, builds/deploys and
 # creates the Forgejo release.
@@ -31,13 +32,6 @@ jobs:
         run: |
           set -euo pipefail
           git config --global --add safe.directory "$PWD"
-
-          # Nothing new since the last release: skip.
-          EXISTING=$(git tag --points-at HEAD | grep -E '^[0-9]' | head -1 || true)
-          if [ -n "$EXISTING" ]; then
-            echo "HEAD already at ${EXISTING}, skipping new tag"
-            exit 0
-          fi
 
           # Release commit + tag authored by ci-bot; pushed with RELEASE_PAT (persisted by
           # actions/checkout).
