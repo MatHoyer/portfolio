@@ -4,9 +4,13 @@
 # The docker-publish workflow then catches the tag push, builds/deploys and
 # creates the Forgejo release.
 #
-# The push MUST use a personal token (secret RELEASE_PAT, write access to this
-# repo, ideally the ci-bot user's): pushes made with the automatic workflow token
-# don't trigger other workflows, so docker-publish would never fire.
+# The push MUST use a personal token, not the automatic workflow token: pushes
+# made with the latter don't trigger other workflows, so docker-publish would
+# never fire. Like docker-publish, credentials come from Proton Pass
+# (pass-cli, unlocked by the PROTON_PASS_PERSONAL_ACCESS_TOKEN_PROD secret):
+#   Forgejo-ops/OPS_REPO_HOST                 host of this Forgejo instance
+#   Forgejo-ops/OPS_REPO_USER                 ci-bot user (also git author)
+#   Forgejo-ops/PORTFOLIO_REPO_TOKEN          ci-bot token with write to this repo
 name: release-tag
 on:
   schedule:
@@ -26,20 +30,48 @@ jobs:
         with:
           ref: main
           fetch-depth: 0
-          token: ${{ secrets.RELEASE_PAT }}
+          # Don't persist the auto token: it would override the PAT below.
+          persist-credentials: false
 
       - name: Bump and push tag
+        env:
+          PROTON_PASS_PERSONAL_ACCESS_TOKEN_PROD: ${{ secrets.PROTON_PASS_PERSONAL_ACCESS_TOKEN_PROD }}
         run: |
           set -euo pipefail
           git config --global --add safe.directory "$PWD"
 
-          # Release commit + tag authored by ci-bot; pushed with RELEASE_PAT (persisted by
-          # actions/checkout).
+          # Release commit + tag authored by ci-bot.
           git config --global user.name  "ci-bot"
           git config --global user.email "mathieuhoyer+ci-bot@gmail.com"
 
-          # Same script as a manual `pnpm release`: lint + typecheck, bump
-          # package.json, commit, tag, push branch and tag.
           corepack enable
           pnpm install --frozen-lockfile
-          node scripts/create-tag.mjs patch
+
+          # Install pass-cli (glibc x86_64; catthehacker ubuntu is glibc).
+          ver=2.2.0
+          curl -fsSL "https://proton.me/download/pass-cli/${ver}/pass-cli-linux-x86_64" \
+            -o /usr/local/bin/pass-cli
+          chmod +x /usr/local/bin/pass-cli
+
+          # Headless session: filesystem key provider, session in the workspace.
+          export PROTON_PASS_KEY_PROVIDER=fs
+          export PROTON_PASS_SESSION_DIR="$PWD/.pass-session"
+          mkdir -p "$PROTON_PASS_SESSION_DIR"
+
+          pass-cli logout >/dev/null 2>&1 || true
+          pass-cli login --pat "$PROTON_PASS_PERSONAL_ACCESS_TOKEN_PROD" >/dev/null
+          trap 'pass-cli logout >/dev/null 2>&1 || true' EXIT
+
+          cat > /tmp/release.env <<'EOF'
+          OPS_REPO_HOST=pass://Coding-prod/Forgejo-ops/OPS_REPO_HOST
+          OPS_REPO_USER=pass://Coding-prod/Forgejo-ops/OPS_REPO_USER
+          PORTFOLIO_REPO_TOKEN=pass://Coding-prod/Forgejo-ops/PORTFOLIO_REPO_TOKEN
+          EOF
+
+          # Same script as a manual `pnpm release`: lint + typecheck, bump
+          # package.json, commit, tag, push branch and tag (via the PAT).
+          pass-cli run --env-file /tmp/release.env -- bash -c '
+            set -euo pipefail
+            git remote set-url origin "https://${OPS_REPO_USER}:${PORTFOLIO_REPO_TOKEN}@${OPS_REPO_HOST}/${GITHUB_REPOSITORY}.git"
+            node scripts/create-tag.mjs patch
+          '
