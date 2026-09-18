@@ -10,7 +10,7 @@
 # (pass-cli, unlocked by the PROTON_PASS_PERSONAL_ACCESS_TOKEN_PROD secret):
 #   Forgejo-ops/OPS_REPO_HOST                 host of this Forgejo instance
 #   Forgejo-ops/OPS_REPO_USER                 ci-bot user (also git author)
-#   Forgejo-ops/PORTFOLIO_REPO_TOKEN          ci-bot token with write to this repo
+#   Forgejo-ops/OPS_REPO_TOKEN                ci-bot token; needs write to this repo too
 name: release-tag
 on:
   schedule:
@@ -65,7 +65,7 @@ jobs:
           cat > /tmp/release.env <<'EOF'
           OPS_REPO_HOST=pass://Coding-prod/Forgejo-ops/OPS_REPO_HOST
           OPS_REPO_USER=pass://Coding-prod/Forgejo-ops/OPS_REPO_USER
-          PORTFOLIO_REPO_TOKEN=pass://Coding-prod/Forgejo-ops/PORTFOLIO_REPO_TOKEN
+          PORTFOLIO_REPO_TOKEN=pass://Coding-prod/Forgejo-ops/OPS_REPO_TOKEN
           EOF
 
           # Same script as a manual `pnpm release`: lint + typecheck, bump
