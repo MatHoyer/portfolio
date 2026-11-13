@@ -4,10 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { CodePanel } from "@/components/swagger/code-panel";
-import { OperationBlock } from "@/components/swagger/operation-block";
-import { SchemaTable } from "@/components/swagger/schema-table";
-import { LanguageIcon } from "@/components/language/language-icon";
-import { formatLanguageLabel, normalizeLanguageKey } from "@/lib/languages";
+import { LanguageBars } from "@/components/language/language-bars";
+import { collectRepoLanguages, formatLanguageLabel, normalizeLanguageKey } from "@/lib/languages";
 import { getDeveloperData } from "@/lib/github";
 import { Link } from "@/i18n/navigation";
 import { localeAlternates } from "@/lib/metadata";
@@ -34,116 +32,93 @@ export default async function ProfilePage({ params }: Props) {
   const t = await getTranslations("profile");
   const tCommon = await getTranslations("common");
   const data = await getDeveloperData();
+  const languagePages = new Set(collectRepoLanguages(data.repositories));
+  const topLanguage = data.languagesCount[0];
 
-  const schemaRows = [
-    { name: "name", type: "string", value: "Mathieu HOYER", required: true },
-    { name: "email", type: "string", value: data.email, required: false },
-    { name: "company", type: "string", value: data.company, required: false },
-    { name: "location", type: "string", value: data.location, required: false },
-    {
-      name: "totalCommitContributions",
-      type: "integer",
-      value: data.totalCommitContributions,
-      required: true,
-    },
-    { name: "totalRepos", type: "integer", value: data.totalRepos, required: true },
+  const stats = [
+    { label: t("statRepos"), value: data.totalRepos },
+    { label: t("statCommits"), value: data.totalCommitContributions },
+    { label: t("statLanguages"), value: data.languagesCount.length },
   ];
 
   return (
-    <div className="flex flex-col gap-8">
-      <OperationBlock method="GET" path="/developer" summary={t("summary")}>
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-            <Avatar className="size-20 border-2 border-[var(--swagger-post)]">
-              <AvatarImage src="https://github.com/MatHoyer.png" alt="Mathieu HOYER" />
-              <AvatarFallback className="bg-swagger-surface-muted text-xl">MH</AvatarFallback>
-            </Avatar>
-            <div>
-              <h1 className="font-mono text-2xl font-bold text-swagger-text">Mathieu HOYER</h1>
-              <p className="text-swagger-muted">
-                {data.company ?? "—"} @ {data.location ?? "—"}
-              </p>
-              <p className="text-sm text-swagger-muted">
-                {t("commitsAcross", {
-                  commits: data.totalCommitContributions,
-                  repos: data.totalRepos,
-                })}
-              </p>
-            </div>
-          </div>
-
-          <div>
-            <h3 className="mb-2 font-mono text-sm font-semibold text-[var(--swagger-post)]">
-              {tCommon("schema")}
-            </h3>
-            <SchemaTable rows={schemaRows} />
-          </div>
-
-          {data.languagesCount.length > 0 && (
-            <div>
-              <h3 className="mb-2 font-mono text-sm font-semibold text-[var(--swagger-post)]">
-                {t("skillDistribution")}
-              </h3>
-              <div className="flex flex-col gap-2">
-                {data.languagesCount.map((lang) => (
-                  <div
-                    key={lang.name}
-                    className="flex flex-col gap-1 sm:grid sm:grid-cols-[7rem_minmax(0,1fr)_2.75rem] sm:items-center sm:gap-x-3"
-                  >
-                    <span className="flex min-w-0 items-center gap-2 font-mono text-sm">
-                      <LanguageIcon name={lang.name} size={18} className="shrink-0" />
-                      <span className="truncate">
-                        {formatLanguageLabel(normalizeLanguageKey(lang.name))}
-                      </span>
-                    </span>
-                    <div className="flex items-center gap-3 sm:contents">
-                      <div className="h-2 min-w-0 flex-1 overflow-hidden rounded bg-swagger-border sm:flex-none">
-                        <div
-                          className="h-full bg-[var(--swagger-get)]"
-                          style={{ width: `${lang.percentage}%` }}
-                        />
-                      </div>
-                      <span className="shrink-0 text-right font-mono text-xs tabular-nums text-swagger-muted sm:w-auto">
-                        {lang.percentage}%
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <div className="flex flex-col gap-3 sm:flex-row">
-            <a
-              href="https://github.com/MatHoyer"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                buttonVariants({ variant: "outline" }),
-                "border-[var(--swagger-get)] font-mono text-[var(--swagger-get)] hover:bg-[var(--swagger-get)]/10",
-              )}
-            >
-              {t("viewOnGitHub")}
-            </a>
-            <Link
-              href="/contact-me"
-              className={cn(
-                buttonVariants({ variant: "outline" }),
-                "border-[var(--swagger-post)] font-mono text-[var(--swagger-post)] hover:bg-[var(--swagger-post)]/10",
-              )}
-            >
-              {t("postContact")}
-            </Link>
-          </div>
-
-          <div>
-            <h3 className="mb-2 font-mono text-sm font-semibold text-[var(--swagger-post)]">
-              {tCommon("response200")}
-            </h3>
-            <CodePanel data={data} />
+    <div className="flex flex-col gap-14">
+      <section className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-5 sm:flex-row sm:items-center">
+          <Avatar className="size-24 ring-2 ring-[var(--swagger-topbar-accent)] ring-offset-4 ring-offset-swagger-bg">
+            <AvatarImage src="https://github.com/MatHoyer.png" alt="Mathieu Hoyer" />
+            <AvatarFallback className="bg-swagger-surface-muted text-2xl font-bold">MH</AvatarFallback>
+          </Avatar>
+          <div className="flex flex-col items-start">
+            <span className="font-mono text-xs tracking-wide text-[var(--swagger-accent-text)]">
+              GET /developer
+            </span>
+            <h1 className="mt-2 text-4xl leading-none font-extrabold tracking-tight text-swagger-text sm:text-5xl">
+              Mathieu Hoyer
+            </h1>
+            <p className="mt-3 text-lg text-swagger-muted">
+              {[t("role"), data.company, data.location].filter(Boolean).join(" · ")}
+            </p>
           </div>
         </div>
-      </OperationBlock>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/contact-me"
+            className={cn(
+              buttonVariants({ size: "lg" }),
+              "h-10 bg-[var(--swagger-topbar-accent)] px-4 font-mono font-bold text-[var(--swagger-topbar)] hover:opacity-90",
+            )}
+          >
+            POST /contact-me
+          </Link>
+          <a
+            href="https://github.com/MatHoyer"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "lg" }),
+              "h-10 border-swagger-border bg-transparent px-4 font-mono text-swagger-text",
+            )}
+          >
+            github.com/MatHoyer
+          </a>
+        </div>
+      </section>
+
+      <dl className="grid grid-cols-3 divide-x divide-swagger-border rounded-xl border border-swagger-border bg-swagger-surface">
+        {stats.map((stat) => (
+          <div key={stat.label} className="flex flex-col gap-1 px-4 py-5 sm:px-6">
+            <dt className="font-mono text-xs text-swagger-muted">{stat.label}</dt>
+            <dd className="text-3xl font-extrabold tracking-tight tabular-nums text-swagger-text sm:text-4xl">
+              {stat.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      {topLanguage && (
+        <section className="flex flex-col gap-5">
+          <div className="flex flex-col gap-1">
+            <h2 className="text-xl font-bold tracking-tight text-swagger-text">
+              {t("languagesTitle")}
+            </h2>
+            <p className="text-sm text-swagger-muted">
+              {t("languagesNote", {
+                top: formatLanguageLabel(normalizeLanguageKey(topLanguage.name)),
+              })}
+            </p>
+          </div>
+          <LanguageBars languages={data.languagesCount} linkable={languagePages} />
+        </section>
+      )}
+
+      <details className="rounded-xl border border-swagger-border bg-swagger-surface p-4">
+        <summary className="cursor-pointer font-mono text-sm font-semibold text-[var(--swagger-post)] marker:text-swagger-muted">
+          {tCommon("response200")}{" "}
+          <span className="font-normal text-swagger-muted">{tCommon("fullJson")}</span>
+        </summary>
+        <CodePanel data={data} className="mt-4" />
+      </details>
     </div>
   );
 }

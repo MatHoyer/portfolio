@@ -93,7 +93,9 @@ function getAllLanguagesSize(
     .map((lang) => ({
       name: LANGUAGE_SHORTCUTS[lang.name] ?? lang.name,
       percentage: Math.round((lang.totalSize / mastery) * 100),
-    }));
+    }))
+    .filter((lang) => lang.percentage > 0)
+    .sort((a, b) => b.percentage - a.percentage);
 }
 
 async function fetchGitHubUser(): Promise<GitHubUserResponse> {

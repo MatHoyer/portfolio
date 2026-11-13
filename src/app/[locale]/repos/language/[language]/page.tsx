@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
+import { PageHeader } from "@/components/layout/page-header";
 import { ReposContent } from "@/components/repos/repos-content";
 import { SyncLanguageUrl } from "@/components/language/sync-language-url";
-import { OperationBlock } from "@/components/swagger/operation-block";
 import { buttonVariants } from "@/components/ui/button";
 import {
   collectRepoLanguages,
@@ -63,20 +63,14 @@ export default async function ReposByLanguagePage({ params }: Props) {
   return (
     <div className="flex flex-col gap-8">
       <SyncLanguageUrl language={language} />
-      <OperationBlock
-        method="GET"
-        path={languageFilterPath(language)}
-        summary={t("filterBySummary", {
-          language: formatLanguageLabel(language),
-          count: filtered.length,
-        })}
-      >
-        <ReposContent
-          repositories={data.repositories}
-          languages={languages}
-          currentLanguage={language}
-        />
-      </OperationBlock>
+      <PageHeader tag={`GET ${languageFilterPath(language)}`} title={formatLanguageLabel(language)}>
+        {t("repoCount", { count: filtered.length })}
+      </PageHeader>
+      <ReposContent
+        repositories={data.repositories}
+        languages={languages}
+        currentLanguage={language}
+      />
       <Link
         href="/repos"
         className={cn(

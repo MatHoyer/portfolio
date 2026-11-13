@@ -7,9 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-sans: var(--font-schibsted), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  --font-heading: var(--font-schibsted), system-ui, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -130,25 +130,26 @@
   }
 }
 
-/* Swagger UI 5 — light theme (default petstore-style) */
+/* "Spec" art direction: ink + one amber accent, reserved for actions. Light theme. */
 :root {
-  --swagger-bg: #fafafa;
+  --swagger-bg: #f6f7f9;
   --swagger-surface: #ffffff;
-  --swagger-surface-muted: #f7f7f7;
-  --swagger-topbar: #1b1b1b;
-  --swagger-topbar-accent: #89bf04;
-  --swagger-border: #d8dde7;
-  --swagger-text: #3b4151;
-  --swagger-muted: #6b7c93;
-  --swagger-get: #61affe;
-  --swagger-post: #49cc90;
-  --swagger-put: #fca130;
-  --swagger-delete: #f93e3e;
-  --swagger-code-bg: #41444e;
-  --swagger-code-text: #e8e8e8;
-  --swagger-link: #4990e2;
-  --terminal-titlebar: #e8e8e8;
-  --terminal-titlebar-text: #555555;
+  --swagger-surface-muted: #f0f2f5;
+  --swagger-topbar: #0d1015;
+  --swagger-topbar-accent: #ffb648;
+  --swagger-accent-text: #9a5800;
+  --swagger-border: #e1e4ea;
+  --swagger-text: #161a22;
+  --swagger-muted: #5b6576;
+  --swagger-get: #1f6fd1;
+  --swagger-post: #13804f;
+  --swagger-put: #b45f00;
+  --swagger-delete: #c93030;
+  --swagger-code-bg: #0d1015;
+  --swagger-code-text: #e7eaf0;
+  --swagger-link: #1f6fd1;
+  --terminal-titlebar: #1b212b;
+  --terminal-titlebar-text: #8791a1;
   --terminal-dot-red: #ff5f57;
   --terminal-dot-yellow: #febc2e;
   --terminal-dot-green: #28c840;
@@ -157,17 +158,21 @@
 }
 
 .dark {
-  --swagger-bg: #141414;
-  --swagger-surface: #1e1e1e;
-  --swagger-surface-muted: #262626;
-  --swagger-topbar: #0a0a0a;
-  --swagger-border: #333333;
-  --swagger-text: #e8e8e8;
-  --swagger-muted: #9aa5b4;
-  --swagger-code-bg: #0d1117;
-  --swagger-code-text: #c9d1d9;
-  --terminal-titlebar: #2d2d2d;
-  --terminal-titlebar-text: #aaaaaa;
+  --swagger-bg: #0d1015;
+  --swagger-surface: #141921;
+  --swagger-surface-muted: #1b212b;
+  --swagger-topbar: #0d1015;
+  --swagger-accent-text: #ffb648;
+  --swagger-border: #252c37;
+  --swagger-text: #e7eaf0;
+  --swagger-muted: #8791a1;
+  --swagger-get: #6cb6ff;
+  --swagger-post: #5fd39a;
+  --swagger-put: #ffb648;
+  --swagger-delete: #ff7b72;
+  --swagger-code-bg: #0a0d11;
+  --swagger-code-text: #e7eaf0;
+  --swagger-link: #8ab4ff;
 }
 
 @keyframes terminal-blink {
@@ -193,7 +198,7 @@
 }
 
 .code-panel .shiki {
-  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
   font-size: inherit;
   line-height: 1.5;
 }

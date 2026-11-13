@@ -19,10 +19,10 @@ export function SwaggerLayout({
 
   return (
     <div className="flex min-h-screen flex-col bg-swagger-bg text-swagger-text">
-      <header className="flex items-center justify-between gap-2 bg-swagger-topbar px-4 py-3 text-white md:gap-4 md:px-6">
+      <header className="flex items-center justify-between gap-2 border-b border-white/10 bg-swagger-topbar px-4 py-3 text-white md:gap-4 md:px-6">
         <div className="flex min-w-0 flex-1 items-center gap-2 md:gap-3">
           <MobileNavSheet />
-          <span className="hidden rounded bg-[var(--swagger-topbar-accent)] px-2 py-0.5 font-mono text-xs font-bold text-white sm:inline">
+          <span className="hidden rounded bg-[var(--swagger-topbar-accent)] px-2 py-0.5 font-mono text-xs font-bold text-[var(--swagger-topbar)] sm:inline">
             OAS 3.1
           </span>
           <Link href="/" className="truncate font-semibold hover:underline">

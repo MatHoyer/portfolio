@@ -49,6 +49,23 @@ export function getLanguageIconComponent(
   return ICON_MAP[normalizeLanguageKey(name)] ?? null;
 }
 
+// Linguist colors, nudged where the original vanishes on the dark theme (C, Dockerfile).
+const LANGUAGE_COLORS: Record<string, string> = {
+  typescript: "#3178c6",
+  javascript: "#f1e05a",
+  go: "#00add8",
+  rust: "#dea584",
+  c: "#a8b9cc",
+  "c++": "#f34b7d",
+  python: "#3572a5",
+  dockerfile: "#2496ed",
+  plpgsql: "#336790",
+};
+
+export function languageColor(name: string): string {
+  return LANGUAGE_COLORS[normalizeLanguageKey(name)] ?? "var(--swagger-muted)";
+}
+
 export function formatLanguageLabel(name: string): string {
   const key = normalizeLanguageKey(name);
   if (key === "typescript") return "TypeScript";

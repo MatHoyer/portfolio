@@ -30,49 +30,44 @@
     "system": "System"
   },
   "loader": {
-    "summary": "Loading endpoint…",
     "windowTitle": "bash — portfolio",
     "statusConnecting": "connecting…",
     "statusFetching": "fetching response…",
     "statusParsing": "parsing JSON…"
   },
   "common": {
-    "schema": "Schema",
     "response200": "Response 200",
-    "languagesArray": "languages[]",
-    "execute": "Execute",
     "subject": "subject",
     "body": "body",
     "stringPlaceholder": "string",
-    "noDescription": "No description"
+    "fullJson": "· full JSON"
   },
   "home": {
-    "title": "Developer API",
-    "subtitle": "Portfolio of Mathieu HOYER — backend developer. Explore endpoints below.",
-    "codeDescription": "Personal developer portfolio",
-    "overviewSummary": "API overview",
-    "availableEndpoints": "Available endpoints:",
+    "headline": "Backend developer who ships the whole stack.",
+    "pitch": "I'm Mathieu, backend developer at <b>LinkByCar</b> in Paris. I write Go and TypeScript, model data in Postgres, and build my own platform: <b>kipitiny</b>, a self-hosted PaaS in a single Go binary.",
+    "role": "backend developer",
     "featuredRepos": "Featured repositories",
     "viewAllRepos": "GET /repos → view all {count} repositories"
   },
   "profile": {
     "metaTitle": "Profile",
     "metaDescription": "Developer profile — Mathieu HOYER",
-    "summary": "Developer profile",
-    "commitsAcross": "{commits} commits across {repos} repositories",
-    "skillDistribution": "languages[] — skill distribution",
-    "viewOnGitHub": "View on GitHub",
-    "postContact": "POST /contact"
+    "role": "Backend developer",
+    "statRepos": "repositories",
+    "statCommits": "commits, last 12 months",
+    "statLanguages": "languages",
+    "languagesTitle": "Languages",
+    "languagesNote": "Code volume across my repositories, relative to {top}."
   },
   "repos": {
     "metaTitle": "Repositories",
     "metaDescription": "GitHub repositories by Mathieu HOYER",
-    "listSummary": "List repositories ({count})",
+    "title": "Projects",
+    "subtitle": "{count} repositories, most starred first.",
     "filterLabel": "language",
     "allLanguages": "All languages",
     "repoCount": "{count, plural, one {# repository} other {# repositories}}",
     "noReposForLanguage": "No repositories for this language.",
-    "filterBySummary": "Filter by {language} ({count})",
     "backToAll": "← GET /repos (all)",
     "metaByLanguageTitle": "Repos — {language}",
     "metaByLanguageDescription": "Repositories using {language}"
@@ -80,22 +75,26 @@
   "repo": {
     "metaDescription": "Repository {name} — Mathieu HOYER",
     "openOnGitHub": "Open on GitHub",
-    "backToRepos": "← GET /repos"
+    "backToRepos": "← GET /repos",
+    "statStars": "stars",
+    "statForks": "forks",
+    "statLanguages": "languages",
+    "languagesTitle": "Languages"
   },
   "contact": {
     "metaTitle": "Contact",
     "metaDescription": "Contact Mathieu HOYER",
-    "summary": "Send a message",
-    "intro": "Opens your mail client with subject and body prefilled. Or email",
-    "orEmail": "Or email"
+    "intro": "Write your message here and it opens in your mail app, ready to send. Nothing is sent from this site.",
+    "orEmail": "Or email me directly",
+    "title": "Get in touch",
+    "submit": "Open in mail app"
   },
   "privacy": {
     "metaTitle": "Privacy",
     "metaDescription": "Privacy policy for mathoyer portfolio",
     "title": "Privacy",
     "intro": "This site is a static portfolio. It does not run application servers, does not set tracking cookies, and does not collect form submissions on a backend.",
-    "summary": "Data handling summary",
-    "hosting": "Static files (Docker / GHCR). No server-side runtime.",
+    "hosting": "Static files served from a container image. No server-side runtime.",
     "analytics": "None. No cookies, no trackers.",
     "githubData": "Public profile/repos fetched at build time via GitHub API",
     "contactValue": "Form opens your email client; nothing is sent to this site",

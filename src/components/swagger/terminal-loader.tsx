@@ -1,6 +1,5 @@
 "use client";
 
-import { OperationBlock } from "@/components/swagger/operation-block";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
@@ -34,14 +33,8 @@ export function TerminalLoader({
 
   return (
     <div className={cn("flex flex-col", className)}>
-    <OperationBlock
-      method="GET"
-      path={path}
-      summary={t("summary")}
-      defaultOpen
-    >
-      <div className="overflow-hidden rounded border border-swagger-border shadow-sm">
-        <div className="flex items-center gap-2 border-b border-swagger-border bg-[var(--terminal-titlebar)] px-3 py-2">
+      <div className="overflow-hidden rounded-xl border border-swagger-border shadow-lg">
+        <div className="flex items-center gap-2 border-b border-white/10 bg-[var(--terminal-titlebar)] px-3 py-2">
           <span
             className="size-3 rounded-full bg-[var(--terminal-dot-red)]"
             aria-hidden
@@ -63,7 +56,7 @@ export function TerminalLoader({
             <span className="text-[var(--terminal-prompt)]">$ </span>
             <span>curl -X GET {path}</span>
             {"\n"}
-            <span className="text-swagger-muted">{t(statusKey)}</span>
+            <span className="text-white/50">{t(statusKey)}</span>
             <span
               className="ml-0.5 text-[var(--terminal-cursor)] animate-terminal-blink"
               aria-hidden
@@ -73,7 +66,6 @@ export function TerminalLoader({
           </code>
         </pre>
       </div>
-    </OperationBlock>
     </div>
   );
 }

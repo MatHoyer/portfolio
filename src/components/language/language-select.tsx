@@ -33,7 +33,7 @@ export function LanguageSelect({
 
   return (
     <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-      <label className="font-mono text-sm font-semibold text-[var(--swagger-post)]">
+      <label className="font-mono text-sm text-swagger-muted">
         {t("filterLabel")}
       </label>
       <Select
@@ -47,7 +47,14 @@ export function LanguageSelect({
         }}
       >
         <SelectTrigger className="w-full min-w-[200px] border-swagger-border bg-swagger-surface font-mono sm:w-[240px]">
-          <SelectValue placeholder={t("allLanguages")} />
+          <SelectValue>
+            {(selected: string) => (
+              <span className="flex items-center gap-2">
+                <LanguageIcon name={selected === ALL_VALUE ? "code" : selected} size={18} />
+                {selected === ALL_VALUE ? t("allLanguages") : formatLanguageLabel(selected)}
+              </span>
+            )}
+          </SelectValue>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value={ALL_VALUE}>

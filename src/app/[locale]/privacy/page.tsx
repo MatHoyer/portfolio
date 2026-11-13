@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { OperationBlock } from "@/components/swagger/operation-block";
-import { SchemaTable } from "@/components/swagger/schema-table";
+import { PageHeader } from "@/components/layout/page-header";
 import { localeAlternates } from "@/lib/metadata";
 
 type Props = {
@@ -26,46 +25,51 @@ export default async function PrivacyPage({ params }: Props) {
   const t = await getTranslations("privacy");
 
   const dataRows = [
-    { name: "hosting", type: "string", value: t("hosting") },
-    { name: "analytics", type: "null", value: t("analytics") },
-    { name: "githubData", type: "object", value: t("githubData") },
-    { name: "contact", type: "mailto", value: t("contactValue") },
-    { name: "retention", type: "string", value: t("retention") },
+    { name: "hosting", value: t("hosting") },
+    { name: "analytics", value: t("analytics") },
+    { name: "githubData", value: t("githubData") },
+    { name: "contact", value: t("contactValue") },
+    { name: "retention", value: t("retention") },
   ];
 
   return (
-    <div className="flex flex-col gap-8">
-      <section>
-        <h1 className="mb-2 font-mono text-3xl font-bold text-swagger-text">{t("title")}</h1>
-        <p className="max-w-2xl text-sm text-swagger-muted">{t("intro")}</p>
-      </section>
+    <div className="flex flex-col gap-10">
+      <PageHeader tag="GET /privacy" title={t("title")}>
+        {t("intro")}
+      </PageHeader>
 
-      <OperationBlock method="GET" path="/privacy" summary={t("summary")}>
-        <div className="flex flex-col gap-4">
-          <SchemaTable rows={dataRows} />
-          <p className="text-sm text-swagger-muted">
-            {t("githubNote")}{" "}
-            <a
-              href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-swagger-link hover:underline"
-            >
-              {t("githubLink")}
-            </a>
-            .
-          </p>
-          <p className="text-sm text-swagger-muted">
-            {t("questions")}{" "}
-            <a
-              href="mailto:contact@mathieuhoyer.fr"
-              className="text-swagger-link hover:underline"
-            >
-              contact@mathieuhoyer.fr
-            </a>
-          </p>
-        </div>
-      </OperationBlock>
+      <dl className="flex flex-col">
+        {dataRows.map((row) => (
+          <div
+            key={row.name}
+            className="grid gap-1 border-t border-swagger-border py-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:gap-6"
+          >
+            <dt className="font-mono text-sm text-swagger-muted">{row.name}</dt>
+            <dd className="text-swagger-text">{row.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="flex max-w-[60ch] flex-col gap-3 text-sm text-swagger-muted">
+        <p>
+          {t("githubNote")}{" "}
+          <a
+            href="https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-swagger-link hover:underline"
+          >
+            {t("githubLink")}
+          </a>
+          .
+        </p>
+        <p>
+          {t("questions")}{" "}
+          <a href="mailto:contact@mathieuhoyer.fr" className="text-swagger-link hover:underline">
+            contact@mathieuhoyer.fr
+          </a>
+        </p>
+      </div>
     </div>
   );
 }

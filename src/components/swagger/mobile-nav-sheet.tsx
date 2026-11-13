@@ -35,7 +35,7 @@ export function MobileNavSheet() {
       >
         <SheetHeader className="border-b border-swagger-border">
           <div className="flex items-center gap-2">
-            <span className="rounded bg-[var(--swagger-topbar-accent)] px-2 py-0.5 font-mono text-xs font-bold text-white">
+            <span className="rounded bg-[var(--swagger-topbar-accent)] px-2 py-0.5 font-mono text-xs font-bold text-[var(--swagger-topbar)]">
               OAS 3.1
             </span>
             <SheetTitle className="font-mono text-sm text-swagger-text">
@@ -51,7 +51,7 @@ export function MobileNavSheet() {
             href="https://github.com/MatHoyer"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-mono text-sm text-[var(--swagger-topbar-accent)] hover:underline"
+            className="font-mono text-sm text-[var(--swagger-accent-text)] hover:underline"
           >
             github.com/MatHoyer
           </a>

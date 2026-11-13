@@ -30,49 +30,44 @@
     "system": "Système"
   },
   "loader": {
-    "summary": "Chargement de l'endpoint…",
     "windowTitle": "bash — portfolio",
     "statusConnecting": "connexion…",
     "statusFetching": "récupération de la réponse…",
     "statusParsing": "analyse du JSON…"
   },
   "common": {
-    "schema": "Schéma",
     "response200": "Réponse 200",
-    "languagesArray": "languages[]",
-    "execute": "Exécuter",
     "subject": "subject",
     "body": "body",
     "stringPlaceholder": "string",
-    "noDescription": "Aucune description"
+    "fullJson": "· JSON complet"
   },
   "home": {
-    "title": "API Développeur",
-    "subtitle": "Portfolio de Mathieu HOYER — développeur backend. Explorez les endpoints ci-dessous.",
-    "codeDescription": "Portfolio personnel de développeur",
-    "overviewSummary": "Vue d'ensemble de l'API",
-    "availableEndpoints": "Endpoints disponibles :",
+    "headline": "Développeur backend qui livre toute la stack.",
+    "pitch": "Je suis Mathieu, développeur backend chez <b>LinkByCar</b> à Paris. J'écris du Go et du TypeScript, je modélise les données dans Postgres, et je construis ma propre plateforme : <b>kipitiny</b>, un PaaS auto-hébergé en un seul binaire Go.",
+    "role": "développeur backend",
     "featuredRepos": "Dépôts à la une",
     "viewAllRepos": "GET /repos → voir les {count} dépôts"
   },
   "profile": {
     "metaTitle": "Profil",
     "metaDescription": "Profil développeur — Mathieu HOYER",
-    "summary": "Profil développeur",
-    "commitsAcross": "{commits} commits sur {repos} dépôts",
-    "skillDistribution": "languages[] — répartition des compétences",
-    "viewOnGitHub": "Voir sur GitHub",
-    "postContact": "POST /contact"
+    "role": "Développeur backend",
+    "statRepos": "dépôts",
+    "statCommits": "commits sur 12 mois",
+    "statLanguages": "langages",
+    "languagesTitle": "Langages",
+    "languagesNote": "Volume de code sur mes dépôts, relatif à {top}."
   },
   "repos": {
     "metaTitle": "Dépôts",
     "metaDescription": "Dépôts GitHub de Mathieu HOYER",
-    "listSummary": "Lister les dépôts ({count})",
+    "title": "Projets",
+    "subtitle": "{count} dépôts, les plus étoilés d'abord.",
     "filterLabel": "language",
     "allLanguages": "Tous les langages",
     "repoCount": "{count, plural, one {# dépôt} other {# dépôts}}",
     "noReposForLanguage": "Aucun dépôt pour ce langage.",
-    "filterBySummary": "Filtrer par {language} ({count})",
     "backToAll": "← GET /repos (tous)",
     "metaByLanguageTitle": "Dépôts — {language}",
     "metaByLanguageDescription": "Dépôts utilisant {language}"
@@ -80,22 +75,26 @@
   "repo": {
     "metaDescription": "Dépôt {name} — Mathieu HOYER",
     "openOnGitHub": "Ouvrir sur GitHub",
-    "backToRepos": "← GET /repos"
+    "backToRepos": "← GET /repos",
+    "statStars": "étoiles",
+    "statForks": "forks",
+    "statLanguages": "langages",
+    "languagesTitle": "Langages"
   },
   "contact": {
     "metaTitle": "Contact",
     "metaDescription": "Contacter Mathieu HOYER",
-    "summary": "Envoyer un message",
-    "intro": "Ouvre votre client mail avec l'objet et le corps préremplis. Ou écrivez à",
-    "orEmail": "Ou par email"
+    "intro": "Écrivez votre message ici : il s'ouvre dans votre messagerie, prêt à envoyer. Rien n'est envoyé depuis ce site.",
+    "orEmail": "Ou écrivez-moi directement",
+    "title": "Me contacter",
+    "submit": "Ouvrir dans la messagerie"
   },
   "privacy": {
     "metaTitle": "Confidentialité",
     "metaDescription": "Politique de confidentialité du portfolio mathoyer",
     "title": "Confidentialité",
     "intro": "Ce site est un portfolio statique. Il n'exécute pas de serveur applicatif, ne pose pas de cookies de suivi et ne collecte pas les soumissions de formulaire côté backend.",
-    "summary": "Résumé du traitement des données",
-    "hosting": "Fichiers statiques (Docker / GHCR). Pas d'exécution serveur.",
+    "hosting": "Fichiers statiques servis depuis une image conteneur. Pas d'exécution serveur.",
     "analytics": "Aucun. Pas de cookies, pas de traceurs.",
     "githubData": "Profil et dépôts publics récupérés au build via l'API GitHub",
     "contactValue": "Le formulaire ouvre votre client mail ; rien n'est envoyé à ce site",

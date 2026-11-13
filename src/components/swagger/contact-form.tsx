@@ -17,49 +17,44 @@ export function ContactForm({ email }: { email: string }) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="text-sm text-swagger-muted">
-        {t("intro")}{" "}
-        <a href={`mailto:${email}`} className="text-swagger-link hover:underline">
-          {email}
-        </a>
-      </p>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          sendEmail();
-        }}
-        className="flex flex-col gap-4"
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        sendEmail();
+      }}
+      className="flex flex-col gap-5"
+    >
+      <div className="flex flex-col gap-2">
+        <label htmlFor="contact-subject" className="font-mono text-xs text-swagger-muted">
+          {tCommon("subject")}
+        </label>
+        <Input
+          id="contact-subject"
+          value={subject}
+          onChange={(e) => setSubject(e.target.value)}
+          className="h-10 border-swagger-border bg-swagger-bg font-mono"
+          placeholder={tCommon("stringPlaceholder")}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <label htmlFor="contact-body" className="font-mono text-xs text-swagger-muted">
+          {tCommon("body")}
+        </label>
+        <Textarea
+          id="contact-body"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          className="min-h-40 border-swagger-border bg-swagger-bg font-mono"
+          placeholder={tCommon("stringPlaceholder")}
+        />
+      </div>
+      <Button
+        type="submit"
+        size="lg"
+        className="h-10 w-fit bg-[var(--swagger-topbar-accent)] px-4 font-mono font-bold text-[var(--swagger-topbar)] hover:opacity-90"
       >
-        <div className="flex flex-col gap-2">
-          <label className="font-mono text-sm font-semibold text-[var(--swagger-post)]">
-            {tCommon("subject")}
-          </label>
-          <Input
-            value={subject}
-            onChange={(e) => setSubject(e.target.value)}
-            className="border-swagger-border bg-swagger-surface font-mono"
-            placeholder={tCommon("stringPlaceholder")}
-          />
-        </div>
-        <div className="flex flex-col gap-2">
-          <label className="font-mono text-sm font-semibold text-[var(--swagger-post)]">
-            {tCommon("body")}
-          </label>
-          <Textarea
-            value={body}
-            onChange={(e) => setBody(e.target.value)}
-            className="min-h-24 border-swagger-border bg-swagger-surface font-mono"
-            placeholder={tCommon("stringPlaceholder")}
-          />
-        </div>
-        <Button
-          type="submit"
-          className="w-fit bg-[var(--swagger-post)] font-mono font-bold text-white hover:opacity-90"
-        >
-          {tCommon("execute")}
-        </Button>
-      </form>
-    </div>
+        {t("submit")}
+      </Button>
+    </form>
   );
 }

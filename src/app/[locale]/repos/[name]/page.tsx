@@ -3,11 +3,9 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { LanguageLabel } from "@/components/language/language-label";
-import { Badge } from "@/components/ui/badge";
 import { CodePanel } from "@/components/swagger/code-panel";
-import { OperationBlock } from "@/components/swagger/operation-block";
-import { SchemaTable } from "@/components/swagger/schema-table";
+import { LanguageBars } from "@/components/language/language-bars";
+import { collectRepoLanguages } from "@/lib/languages";
 import { getDeveloperData, getRepoNames } from "@/lib/github";
 import { Link } from "@/i18n/navigation";
 import { localeAlternates } from "@/lib/metadata";
@@ -45,75 +43,76 @@ export default async function RepoPage({ params }: Props) {
     notFound();
   }
 
-  const schemaRows = [
-    { name: "name", type: "string", value: repo.name, required: true },
-    { name: "description", type: "string", value: repo.description, required: false },
-    { name: "stargazerCount", type: "integer", value: repo.stargazerCount, required: true },
-    { name: "forkCount", type: "integer", value: repo.forkCount, required: true },
-    { name: "url", type: "string", value: repo.url, required: true },
+  const languages = repo.languages.filter((lang) => lang.percentage > 0);
+  const stats = [
+    { label: t("statStars"), value: repo.stargazerCount },
+    { label: t("statForks"), value: repo.forkCount },
+    { label: t("statLanguages"), value: languages.length },
   ];
 
   return (
-    <div className="flex flex-col gap-8">
-      <OperationBlock method="GET" path={`/repos/${repo.name}`} summary={repo.description ?? ""}>
-        <div className="flex flex-col gap-6">
-          <h1 className="font-mono text-2xl font-bold text-[var(--swagger-get)]">{repo.name}</h1>
-
-          <SchemaTable rows={schemaRows} />
-
-          {repo.languages.length > 0 && (
-            <div>
-              <h3 className="mb-2 font-mono text-sm font-semibold text-[var(--swagger-post)]">
-                {tCommon("languagesArray")}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {repo.languages.map((lang) => (
-                  <Badge
-                    key={lang.name}
-                    className="border-swagger-border bg-swagger-surface-muted py-1 text-[var(--swagger-post)]"
-                  >
-                    <LanguageLabel
-                      name={lang.name}
-                      percentage={lang.percentage}
-                      iconSize={16}
-                    />
-                  </Badge>
-                ))}
-              </div>
-            </div>
+    <div className="flex flex-col gap-14">
+      <section className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex min-w-0 flex-col items-start">
+          <Link
+            href="/repos"
+            className="mb-6 font-mono text-xs text-swagger-muted hover:text-swagger-text"
+          >
+            {t("backToRepos")}
+          </Link>
+          <span className="font-mono text-xs tracking-wide text-[var(--swagger-accent-text)]">
+            GET /repos/{repo.name}
+          </span>
+          <h1 className="mt-2 max-w-full font-mono text-3xl leading-tight font-bold tracking-tight break-words text-swagger-text sm:text-5xl">
+            {repo.name}
+          </h1>
+          {repo.description && (
+            <p className="mt-4 max-w-[60ch] text-lg text-swagger-muted">{repo.description}</p>
           )}
-
-          <div className="flex gap-3">
-            <a
-              href={repo.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                buttonVariants(),
-                "bg-[var(--swagger-get)] font-mono font-bold hover:opacity-90",
-              )}
-            >
-              {t("openOnGitHub")}
-            </a>
-            <Link
-              href="/repos"
-              className={cn(
-                buttonVariants({ variant: "outline" }),
-                "border-swagger-border font-mono text-swagger-muted",
-              )}
-            >
-              {t("backToRepos")}
-            </Link>
-          </div>
-
-          <div>
-            <h3 className="mb-2 font-mono text-sm font-semibold text-[#49cc90]">
-              {tCommon("response200")}
-            </h3>
-            <CodePanel data={repo} />
-          </div>
         </div>
-      </OperationBlock>
+        <a
+          href={repo.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(
+            buttonVariants({ size: "lg" }),
+            "h-10 w-fit shrink-0 bg-[var(--swagger-topbar-accent)] px-4 font-mono font-bold text-[var(--swagger-topbar)] hover:opacity-90",
+          )}
+        >
+          {t("openOnGitHub")} ↗
+        </a>
+      </section>
+
+      <dl className="grid grid-cols-3 divide-x divide-swagger-border rounded-xl border border-swagger-border bg-swagger-surface">
+        {stats.map((stat) => (
+          <div key={stat.label} className="flex flex-col gap-1 px-4 py-5 sm:px-6">
+            <dt className="font-mono text-xs text-swagger-muted">{stat.label}</dt>
+            <dd className="text-3xl font-extrabold tracking-tight tabular-nums text-swagger-text sm:text-4xl">
+              {stat.value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+
+      {languages.length > 0 && (
+        <section className="flex flex-col gap-5">
+          <h2 className="text-xl font-bold tracking-tight text-swagger-text">
+            {t("languagesTitle")}
+          </h2>
+          <LanguageBars
+            languages={languages}
+            linkable={new Set(collectRepoLanguages(data.repositories))}
+          />
+        </section>
+      )}
+
+      <details className="rounded-xl border border-swagger-border bg-swagger-surface p-4">
+        <summary className="cursor-pointer font-mono text-sm font-semibold text-[var(--swagger-post)] marker:text-swagger-muted">
+          {tCommon("response200")}{" "}
+          <span className="font-normal text-swagger-muted">{tCommon("fullJson")}</span>
+        </summary>
+        <CodePanel data={repo} className="mt-4" />
+      </details>
     </div>
   );
 }

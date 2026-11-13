@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { PageHeader } from "@/components/layout/page-header";
 import { ReposContent } from "@/components/repos/repos-content";
-import { OperationBlock } from "@/components/swagger/operation-block";
 import { collectRepoLanguages } from "@/lib/languages";
 import { getDeveloperData } from "@/lib/github";
 import { localeAlternates } from "@/lib/metadata";
@@ -31,17 +31,14 @@ export default async function ReposPage({ params }: Props) {
 
   return (
     <div className="flex flex-col gap-8">
-      <OperationBlock
-        method="GET"
-        path="/repos"
-        summary={t("listSummary", { count: data.repositories.length })}
-      >
-        <ReposContent
-          repositories={data.repositories}
-          languages={languages}
-          currentLanguage={null}
-        />
-      </OperationBlock>
+      <PageHeader tag="GET /repos" title={t("title")}>
+        {t("subtitle", { count: data.repositories.length })}
+      </PageHeader>
+      <ReposContent
+        repositories={data.repositories}
+        languages={languages}
+        currentLanguage={null}
+      />
     </div>
   );
 }
